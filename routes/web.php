@@ -8,6 +8,15 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');
 
+// Password reset routes
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->name('password.request')->middleware('guest');
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->name('password.reset')->middleware('guest');
+
 // Protected routes
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
