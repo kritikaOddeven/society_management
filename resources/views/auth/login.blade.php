@@ -16,6 +16,8 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/components.css')}}">
+    
+    @livewireStyles
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script>
@@ -28,6 +30,27 @@
 
         gtag('config', 'UA-94034622-3');
     </script>
+
+<style>
+    .spinner-cus {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ddd;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
     <!-- /END GA -->
 </head>
 
@@ -41,55 +64,8 @@
                             <img src="assets/img/stisla-fill.svg" alt="logo" width="100" class="shadow-light rounded-circle">
                         </div>
 
-                        <div class="card card-primary">
-                            <div class="card-header">
-                                <h4>Login</h4>
-                            </div>
-
-                            <div class="card-body">
-                                <form method="POST" action="#" class="needs-validation" novalidate="">
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input id="email" type="email" class="form-control" name="email" tabindex="1" required autofocus>
-                                        <div class="invalid-feedback">
-                                            Please fill in your email
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="d-block">
-                                            <label for="password" class="control-label">Password</label>
-                                            <div class="float-right">
-                                                <a href="auth-forgot-password.html" class="text-small">
-                                                    Forgot Password?
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <input id="password" type="password" class="form-control" name="password" tabindex="2" required>
-                                        <div class="invalid-feedback">
-                                            please fill in your password
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" name="remember" class="custom-control-input" tabindex="3" id="remember-me">
-                                            <label class="custom-control-label" for="remember-me">Remember Me</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                                            Login
-                                        </button>
-                                    </div>
-                                </form>
-                               
-                            </div>
-                        </div>
-                        {{-- <div class="mt-5 text-muted text-center">
-                            Don't have an account? <a href="auth-register.html">Create One</a>
-                        </div> --}}
+                        @livewire('auth.login')
+                       
                         <div class="simple-footer">
                             Copyright &copy; Oddeven Infotech Pvt. Ltd
                         </div>
@@ -100,10 +76,8 @@
     </div>
 
     <!-- General JS Scripts -->
-    <script src="{{asset('assets/modules/jquery.min.js')}}"></script>
-    <script src="{{asset('assets/modules/popper.js')}}"></script>
-    <script src="{{asset('assets/modules/tooltip.js')}}"></script>
-    <script src="{{asset('assets/modules/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets/modules/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/modules/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/modules/nicescroll/jquery.nicescroll.min.js')}}"></script>
     <script src="{{asset('assets/modules/moment.min.js')}}"></script>
     <script src="{{asset('assets/js/stisla.js')}}"></script>
@@ -115,6 +89,8 @@
     <!-- Template JS File -->
     <script src="{{asset('assets/js/scripts.js')}}"></script>
     <script src="{{asset('assets/js/custom.js')}}"></script>
+    
+    @livewireScripts
 </body>
 
 </html>
