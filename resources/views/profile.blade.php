@@ -64,7 +64,7 @@
             <div class="tab-content" id="myTabContent2">
                 <div class="tab-pane fade {{ $errors->has('current_password') || $errors->has('new_password') || $errors->has('password_confirmation') ? '' : 'active show' }}" id="profile" role="tabpanel" aria-labelledby="home-tab3">
                     <div class="card">
-                        <form action="{{route('admin.update.profile')}}" method="POST" class="needs-validation">
+                        <form action="{{route('update.profile')}}" method="POST" class="needs-validation">
                             @csrf
                           <input type="hidden" name="id" value="{{$admin->id}}">
                           <div class="card-header">
@@ -97,7 +97,7 @@
                 </div>
                 <div class="tab-pane fade {{ $errors->has('current_password') || $errors->has('new_password') || $errors->has('password_confirmation') ? 'active show' : '' }}" id="password" role="tabpanel" aria-labelledby="profile-tab3">
                     <div class="card">
-                        <form action="{{route('admin.update.password')}}" method="POST" class="needs-validation">
+                        <form action="{{route('update.password')}}" method="POST" class="needs-validation">
                           @csrf
                           <input type="hidden" name="email" value="{{$admin->email}}">
 

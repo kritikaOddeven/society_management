@@ -30,8 +30,8 @@ Route::middleware('auth')->group(function () {
     
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::post('/admin/update/profile', [ProfileController::class, 'updateProfile'])->name('admin.update.profile');
-    Route::post('/admin/update/password', [ProfileController::class, 'updatePassword'])->name('admin.update.password');
+    Route::post('/profile/update/', [ProfileController::class, 'updateProfile'])->name('update.profile');
+    Route::post('/profile/update/password', [ProfileController::class, 'updatePassword'])->name('update.password');
     
     Route::post('/logout', function () {
         Auth::logout();
