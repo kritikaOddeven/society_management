@@ -24,12 +24,12 @@
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="fa-regular fa-building"></i></i> <span>Apartment</span></a>
+                            <a href="" class="nav-link has-dropdown"><i class="fa-regular fa-building"></i></i> <span>Apartment</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="">Tower</a></li>
-                                <li><a class="nav-link" href="">Floor</a></li>
-                                <li><a class="nav-link" href="">Apartment</a></li>
-                                <li><a class="nav-link" href="">Parking</a></li>
+                                <li><a class="nav-link" href="{{ route('towers.index') }}">Tower</a></li>
+                                <li><a class="nav-link" href="{{ route('floors.index') }}">Floor</a></li>
+                                {{-- <li><a class="nav-link" href="{{ route('apartments.index') }}">Apartment</a></li> --}}
+                                {{-- <li><a class="nav-link" href="{{ route('parkings.index') }}">Parking</a></li> --}}
                             </ul>
                         </li>
 

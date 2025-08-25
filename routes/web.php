@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TowerController;
+use App\Http\Controllers\FloorController;
 
 // Public routes
 Route::get('/login', function () {
@@ -44,4 +46,7 @@ Route::middleware('auth')->group(function () {
         request()->session()->regenerateToken();
         return redirect('/login');
     })->name('logout');
+
+    Route::resource('towers', TowerController::class);
+    Route::resource('floors', FloorController::class);
 });
