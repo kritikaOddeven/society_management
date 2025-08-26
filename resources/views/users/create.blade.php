@@ -24,7 +24,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="full_name">Full Name *</label>
+                                            <label for="full_name">Full Name <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" value="{{ old('full_name') }}" required>
                                             @error('full_name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="email">Email Address *</label>
+                                            <label for="email">Email Address  <span class="text-danger">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -41,7 +41,7 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="col-md-6">
+                                    {{-- <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="country_code">Country Code</label>
                                             <select class="form-control @error('country_code') is-invalid @enderror" id="country_code" name="country_code">
@@ -61,7 +61,7 @@
                                             @enderror
                                         </div>
                                     </div> --}}
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="phone_number">Phone Number</label>
                                             <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" placeholder="Phone">
@@ -73,7 +73,7 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="role">Role *</label>
+                                            <label for="role">Role  <span class="text-danger">*</span></label>
                                             <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" required>
                                                 <option value="">Select Role</option>
                                                 @foreach ($roles as $role)
@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="password">Password *</label>
+                                            <label for="password">Password  <span class="text-danger">*</span></label>
                                             <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
                                             @error('password')
                                                 <div class="invalid-feedback">{{ $message }}</div>

@@ -13,7 +13,7 @@
                         <li><a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i> <span>Users Management</span></a></li>
                         @endcan
 
-                        <li><a class="nav-link" href="blank.html"><i class="far fa-user"></i> <span>Owner</span></a></li>
+                        <li><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
 
                          <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-th"></i></i> <span>Tenant</span></a>
@@ -28,7 +28,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="{{ route('towers.index') }}">Tower</a></li>
                                 <li><a class="nav-link" href="{{ route('floors.index') }}">Floor</a></li>
-                                {{-- <li><a class="nav-link" href="{{ route('apartments.index') }}">Apartment</a></li> --}}
+                                <li><a class="nav-link" href="{{ route('apartments.index') }}">Apartment</a></li>
                                 {{-- <li><a class="nav-link" href="{{ route('parkings.index') }}">Parking</a></li> --}}
                             </ul>
                         </li>
