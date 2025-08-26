@@ -23,11 +23,7 @@ class TowerController extends Controller
         return redirect()->route('towers.index')->with('success', 'Tower created successfully.');
     }
 
-    public function destroy(Tower $tower)
-    {
-        $tower->delete();
-        return redirect()->route('towers.index')->with('success', 'Tower deleted successfully.');
-    }
+   
 
     public function update(Request $request, $id)
     {
@@ -40,5 +36,11 @@ class TowerController extends Controller
         $tower->save();
 
         return redirect()->route('towers.index')->with('success', 'Tower updated successfully.');
+    }
+
+    public function destroy(Tower $tower)
+    {
+        $tower->delete();
+        return redirect()->route('towers.index')->with('success', 'Tower deleted successfully.');
     }
 }

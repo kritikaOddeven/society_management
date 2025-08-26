@@ -85,7 +85,7 @@
     </section>
     {{-- End main section --}}
     @include('apartments.tower.create')
-    {{-- @include('apartments.tower.edit') --}}
+    
     @foreach ($towers as $key => $t)
         @include('apartments.tower.edit', ['tower' => $t])
     @endforeach

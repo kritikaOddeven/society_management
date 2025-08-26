@@ -37,7 +37,7 @@
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i> <span>Amenities</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="">Amenities</a></li>
-                                <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li>
+                                {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
                             </ul>
                         </li>
 
@@ -54,6 +54,14 @@
                             <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Report</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="">Maintenance Report</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link" href="{{ route('types.index')}}">Apartment Type</a></li>
+                                {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
                             </ul>
                         </li>
 

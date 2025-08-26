@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('floors', FloorController::class);
     Route::resource('apartments', ApartmentController::class);
 
-    Route::prefix('settings')->as('settings.')->group(function () {
-        Route::resource('types', ApartmentTypeController::class);
-    });
+    Route::resource('types', ApartmentTypeController::class);
+    // Route::prefix('settings')->as('settings.')->group(function () {
+    // });
 });

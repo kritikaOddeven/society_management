@@ -17,7 +17,7 @@
                         <div class="card-header d-md-flex justify-content-between">
                             <h4>Apartment Type List</h4>
                             <div>
-                                <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addATypeModal"><i class="fas fa-plus"></i> Add Tower</button>
+                                <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addATypeModal"><i class="fas fa-plus"></i> Add Apartment Type</button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -56,17 +56,14 @@
                                          @foreach ($types as $key => $type)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
-                                                <td>{{ $tower->apartment_type }}</td>
+                                                <td>{{ $type->apartment_type }}</td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        
-
-                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editATypeModal{{ $tower->id }}"><i class="fas fa-pencil-alt"></i></button>
-
-                                                        <form action="{{ route('settings.type.destroy', $tower->id) }}" method="POST" style="display: inline;">
+                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editATypeModal{{ $type->id }}"><i class="fas fa-pencil-alt"></i></button>
+                                                        <form action="{{ route('types.destroy', $type->id) }}" method="POST" style="display: inline;">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete this tower?')">
+                                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete this aparment type?')">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -74,7 +71,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                             @include('settings.apartment_type.edit', ['type' => $type])
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -87,5 +83,8 @@
     </section>
     {{-- End main section --}}
     @include('settings.apartment_type.create')
-    {{-- @include('settings.apartment_type.edit') --}}
+       @foreach ($types as $key => $typ)
+         @include('settings.apartment_type.edit', ['type' => $typ])
+
+    @endforeach
 @endsection

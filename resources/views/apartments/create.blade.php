@@ -24,28 +24,30 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="tower_name">Select Tower <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('tower_name') is-invalid @enderror" id="tower_name" name="tower_name" required>
-                                                <option value="">Select Tower Name</option>
-                                                {{-- @foreach ($towers as $tower)
-                                                    <option value="{{ $tower->tower_name }}" {{ old('tower') == $tower->tower_name ? 'selected' : '' }}>
+                                            <label for="tower_id">Select Tower <span class="text-danger">*</span></label>
+                                            <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
+                                                <option value="">Select Tower</option>
+                                                @foreach ($towers as $tower)
+                                                    <option value="{{ $tower->id }}" {{ old('tower_id') == $tower->id ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $tower->tower_name)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
+                                            @error('tower_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="floor">Select Floor <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('floor') is-invalid @enderror" id="floor" name="floor" required>
+                                            <label for="floor_id">Select Floor <span class="text-danger">*</span></label>
+                                            <select class="form-control @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id" required>
                                                 <option value="">Select Floor</option>
-                                                {{-- @foreach ($floors as $floor)
-                                                    <option value="{{ $floor->name }}" {{ old('floor') == $floor->name ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $floor->name)) }}
-                                                    </option>
-                                                @endforeach --}}
                                             </select>
+                                            @error('floor_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
@@ -98,11 +100,11 @@
                                             <label for="apartment_type">Apartment Type <span class="text-danger">*</span></label>
                                             <select class="form-control @error('apartment_type') is-invalid @enderror" id="apartment_type" name="apartment_type" required>
                                                 <option value="">Select Apartment type</option>
-                                                {{-- @foreach ($types as $type)
+                                                @foreach ($types as $type)
                                                     <option value="{{ $type->apartment_type }}" {{ old('apartment_type') == $type->apartment_type ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $type->apartment_type)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
                                             @error('apartment_type')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -178,5 +180,37 @@
         $('#apartment_status').on('change', function() {
             toggleOwnerDiv();
         });
+    });
+
+
+    let towers = @json($towers);
+
+    function populateFloors(towerId) {
+        $('#floor_id').empty().append('<option value="">Select Floor</option>');
+
+        if (!towerId) return;
+
+        let tower = towers.find(t => t.id == towerId);
+        if (tower && tower.floors) {
+            tower.floors.forEach(floor => {
+                $('#floor_id').append('<option value="' + floor.id + '">' + floor.floor_name + '</option>');
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        // On change of tower dropdown
+        $('#tower_id').on('change', function() {
+            populateFloors($(this).val());
+        });
+
+        // Pre-populate if old values exist (validation error case)
+        let oldTower = "{{ old('tower_id') }}";
+        let oldFloor = "{{ old('floor_id') }}";
+
+        if (oldTower) {
+            populateFloors(oldTower);
+            $('#floor_id').val(oldFloor);
+        }
     });
 </script>
