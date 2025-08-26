@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('parkings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('apartment_id')->constrained('apartments')->onDelete('cascade');
-            $table->string('parking_code');
-            $table->foreignId('floor_id')->constrained('floors')->onDelete('cascade')->nullable();
+            $table->foreignId('apartment_id')->nullable()->constrained('apartments')->onDelete('set null');
+            $table->string('parking_code')->unique();
+            $table->foreignId('floor_id')->nullable()->constrained('floors')->onDelete('set null');
+            $table->enum('status', ['Available', 'Occupied'])->default('Available');
             $table->timestamps();
-        });
-
-        Schema::create('apartments', function (Blueprint $table) {
-            $table->foreignId('parking_id')->nullable()->constrained('parkings')->onDelete('set null')->after('id');
         });
     }
 
@@ -30,6 +27,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('parkings');
-        Schema::dropIfExists('apartments');
     }
 };

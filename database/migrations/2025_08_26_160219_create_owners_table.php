@@ -23,10 +23,6 @@ return new class extends Migration
             $table->foreignId('apartment_id')->constrained('apartments')->onDelete('cascade');
             $table->timestamps();
         });
-
-        Schema::create('apartments', function (Blueprint $table) {
-            $table->foreignId('owner_id')->nullable()->constrained('owners')->onDelete('set null')->after('id');
-        });
     }
 
     /**
@@ -35,6 +31,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('owners');
-        Schema::dropIfExists('apartments');
     }
 };
