@@ -54,17 +54,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                         @foreach ($towers as $key => $tower)
+                                        @foreach ($towers as $key => $tower)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
                                                 <td>{{ $tower->tower_name }}</td>
                                                 <td>{{ $tower->apartment_no ?? '' }}</td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        
-
                                                         <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editTowerModal{{ $tower->id }}"><i class="fas fa-pencil-alt"></i></button>
-
                                                         <form action="{{ route('towers.destroy', $tower->id) }}" method="POST" style="display: inline;">
                                                             @csrf
                                                             @method('DELETE')
@@ -76,7 +73,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                             @include('apartments.tower.edit', ['tower' => $tower])
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -90,4 +86,8 @@
     {{-- End main section --}}
     @include('apartments.tower.create')
     {{-- @include('apartments.tower.edit') --}}
+    @foreach ($towers as $key => $t)
+        @include('apartments.tower.edit', ['tower' => $t])
+    @endforeach
+
 @endsection

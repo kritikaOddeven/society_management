@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="editTowerForm" action="{{ url('towers/'.$tower->id ) }}" data-role-id="{{$tower->id}}" method="POST">
+            <form action="{{ url('towers/'.$tower->id ) }}" data-role-id="{{$tower->id}}" method="POST">
                 @method('PUT')  
                 @csrf
                 <div class="modal-body">
@@ -15,7 +15,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="tower_name">Tower Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('tower_name') is-invalid @enderror" id="tower_name" name="tower_name" value="{{ old('tower_name') , $tower->tower_name}}" required>
+                                <input type="text" class="form-control @error('tower_name') is-invalid @enderror" id="tower_name" name="tower_name" value="{{ $tower->tower_name}}" required>
                                 @error('tower_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -26,7 +26,7 @@
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </form>
         </div>
