@@ -13,4 +13,6 @@ class ApartmentController extends Controller
     {
         return view('apartments.create');
     }
+
+   
 }

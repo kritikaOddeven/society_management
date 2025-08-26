@@ -8,6 +8,7 @@
                 </button>
             </div>
             <form action="{{ route('towers.store') }}" method="POST">
+                @csrf
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
@@ -24,7 +25,7 @@
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Save </button>
                 </div>
             </form>
         </div>

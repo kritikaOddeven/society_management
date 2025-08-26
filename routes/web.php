@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\FloorController;
+use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TowerController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\ApartmentTypeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -49,11 +50,13 @@ Route::middleware('auth')->group(function () {
         return redirect('/login');
     })->name('logout');
 
-
     Route::resource('owners', OwnerController::class);
 
     Route::resource('towers', TowerController::class);
     Route::resource('floors', FloorController::class);
     Route::resource('apartments', ApartmentController::class);
 
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::resource('types', ApartmentTypeController::class);
+    });
 });

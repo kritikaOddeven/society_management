@@ -54,15 +54,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($floors as $key => $floor)
+                                        @foreach ($floors as $key => $floor)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
-                                                <td>{{ $floor->floor }}</td>
-                                                <td>{{ $floor->tower_name ?? '' }}</td>
+                                                <td>{{ $floor->floor_name }}</td>
+                                                <td>{{ $floor->tower->tower_name ?? '' }}</td>
                                                 <td>
                                                     <div class="btn-group" role="group">
 
-                                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editFLoorModal"><i class="fas fa-pencil-alt"></i></button>
+                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editFLoorModal"><i class="fas fa-pencil-alt"></i></button>
 
                                                         <form action="{{ route('floors.destroy', $floor->id) }}" method="POST" style="display: inline;">
                                                             @csrf
@@ -75,7 +75,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

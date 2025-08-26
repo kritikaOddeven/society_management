@@ -8,6 +8,7 @@
                 </button>
             </div>
             <form action="{{ route('floors.store') }}" method="POST">
+                @csrf
                 <div class="modal-body">
                     <div class="row">
 
@@ -16,11 +17,11 @@
                                 <label for="tower_id">Tower Name <span class="text-danger">*</span></label>
                                 <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
                                     <option value="">Select Tower</option>
-                                    {{-- @foreach ($towers as $tower)
-                                        <option value="{{ $tower->name }}" {{ old('tower_id') == $tower->name ? 'selected' : '' }}>
+                                    @foreach ($towers as $tower)
+                                        <option value="{{ $tower->id }}" {{ old('tower_id') == $tower->id ? 'selected' : '' }}>
                                             {{ ucfirst(str_replace('-', ' ', $tower->tower_name)) }}
                                         </option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
                                 @error('tower_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -31,20 +32,20 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="floor">Floor <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('floor') is-invalid @enderror" id="floor" name="floor" value="{{ old('floor') }}" required>
-                                @error('floor')
+                                <input type="text" class="form-control @error('floor_name') is-invalid @enderror" id="floor_name" name="floor_name" value="{{ old('floor_name') }}" required>
+                                @error('floor_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        
+
                     </div>
 
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Save </button>
                 </div>
             </form>
         </div>
