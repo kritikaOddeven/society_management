@@ -29,7 +29,7 @@
                                 <li><a class="nav-link" href="{{ route('towers.index') }}">Tower</a></li>
                                 <li><a class="nav-link" href="{{ route('floors.index') }}">Floor</a></li>
                                 <li><a class="nav-link" href="{{ route('apartments.index') }}">Apartment</a></li>
-                                {{-- <li><a class="nav-link" href="{{ route('parkings.index') }}">Parking</a></li> --}}
+                                <li><a class="nav-link" href="{{ route('parkings.index') }}">Parking</a></li>
                             </ul>
                         </li>
 

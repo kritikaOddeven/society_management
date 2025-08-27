@@ -19,41 +19,38 @@
                             <h4>Edit Apartment</h4>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('apartments.update') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ url('apartments/' . $apartment->id) }}" method="POST" enctype="multipart/form-data">
+                                @method('PUT')
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="tower_name">Select Tower <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('tower_name') is-invalid @enderror" id="tower_name" name="tower_name" required>
+                                            <label for="tower_id">Select Tower <span class="text-danger">*</span></label>
+                                            <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
                                                 <option value="">Select Tower Name</option>
-                                                {{-- @foreach ($towers as $tower)
-                                                    <option value="{{ $tower->tower_name }}" {{ old('tower') == $tower->tower_name ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $tower->tower_name)) }}
+                                                @foreach ($towers as $tower)
+                                                    <option value="{{ $tower->id }}" {{ old('tower_id', $apartment->tower_id) == $tower->id ? 'selected' : '' }}>
+                                                        {{ $tower->tower_name }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="floor">Select Floor <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('floor') is-invalid @enderror" id="floor" name="floor" required>
+                                            <select class="form-control @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id" required>
                                                 <option value="">Select Floor</option>
-                                                {{-- @foreach ($floors as $floor)
-                                                    <option value="{{ $floor->name }}" {{ old('floor') == $floor->name ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $floor->name)) }}
-                                                    </option>
-                                                @endforeach --}}
+
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="aparmtent_number">Apartment Number <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('aparmtent_number') is-invalid @enderror" id="aparmtent_number" name="aparmtent_number" value="{{ old('aparmtent_number') }}" placeholder="aparmtent">
-                                            @error('aparmtent_number')
+                                            <label for="apartment_number">Apartment Number <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('apartment_number') is-invalid @enderror" id="apartment_number" name="apartment_number" value="{{ old('apartment_number', $apartment->apartment_number) }}" placeholder="aparmtent">
+                                            @error('apartment_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -62,7 +59,7 @@
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="parking">Select Parking Code</label>
-                                            <select class="form-control @error('parking') is-invalid @enderror" id="parking" name="parking_code" required>
+                                            <select class="form-control @error('parking') is-invalid @enderror" id="parking" name="parking_code" >
                                                 <option value="">Select Parking Code</option>
                                                 {{-- @foreach ($parkings as $parking)
                                                     <option value="{{ $parking->parking_code }}" {{ old('parking_code') == $parking->parking_code ? 'selected' : '' }}>
@@ -84,9 +81,9 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="aparmtent_area">Apartment Area(sqft) <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('aparmtent_area') is-invalid @enderror" id="aparmtent_area" name="aparmtent_area" value="{{ old('aparmtent_area') }}" placeholder="aparmtent">
-                                            @error('aparmtent_area')
+                                            <label for="apartment_area">Apartment Area(sqft) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('apartment_area') is-invalid @enderror" id="apartment_area" name="apartment_area" value="{{ old('apartment_area', $apartment->apartment_area) }}" placeholder="aparmtent">
+                                            @error('apartment_area')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -98,11 +95,11 @@
                                             <label for="apartment_type">Apartment Type <span class="text-danger">*</span></label>
                                             <select class="form-control @error('apartment_type') is-invalid @enderror" id="apartment_type" name="apartment_type" required>
                                                 <option value="">Select Apartment type</option>
-                                                {{-- @foreach ($types as $type)
-                                                    <option value="{{ $type->apartment_type }}" {{ old('apartment_type') == $type->apartment_type ? 'selected' : '' }}>
+                                                @foreach ($types as $type)
+                                                    <option value="{{ $type->id }}" {{ old('apartment_type', $apartment->apartment_type) == $type->id ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $type->apartment_type)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
                                             @error('apartment_type')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -111,14 +108,13 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="apartment_status">Status</label>
-                                            <select class="form-control @error('apartment_status') is-invalid @enderror" id="apartment_status" name="apartment_status">
-                                                <option value=""> Select Apartment Status</option>
-                                                <option value="unsold" {{ old('apartment_status') == 'unsold' ? 'selected' : '' }}>Unsold</option>
-                                                <option value="occupied" {{ old('apartment_status') == 'occupied' ? 'selected' : '' }}>Occupied</option>
-                                                <option value="rent" {{ old('apartment_status') == 'rent' ? 'selected' : '' }}>Avaiable For Rent</option>
+                                            <label for="status">Apartmeent Status</label>
+                                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status">
+                                                <option value="Unsold" {{ old('status', $apartment->status) == 'Unsold' ? 'selected' : '' }}>Unsold</option>
+                                                <option value="Occupied" {{ old('status', $apartment->status) == 'Occupied' ? 'selected' : '' }}>Occupied</option>
+                                                <option value="Rent" {{ old('status', $apartment->status) == 'Rent' ? 'selected' : '' }}>Rent</option>
                                             </select>
-                                            @error('apartment_status')
+                                            @error('status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -143,7 +139,7 @@
                                 </div>
 
                                 <div class="form-group d-flex justify-content-end">
-                                    <a href="{{ route('users.index') }}" class="btn btn-secondary mr-2">Cancel</a>
+                                    <a href="{{ route('apartments.index') }}" class="btn btn-secondary mr-2">Cancel</a>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
 
@@ -162,21 +158,54 @@
     $(document).ready(function() {
         function toggleOwnerDiv() {
             let status = $('#apartment_status').val();
-            if (status === 'occupied' || status === 'rent') {
+            if (status === 'Occupied' || status === 'Rent') {
                 $('#owner_div').show();
-                $('#owner_name').attr('required', true); // make owner required
+                $('#owner_name').attr('required', true);
             } else {
                 $('#owner_div').hide();
-                $('#owner_name').attr('required', false); // remove required
+                $('#owner_name').attr('required', false);
             }
         }
 
-        // Run on load (in case of old values)
+        // Run on page load
         toggleOwnerDiv();
 
         // Run on change
         $('#apartment_status').on('change', function() {
             toggleOwnerDiv();
         });
+    });
+
+
+    let towers = @json($towers);
+
+    function populateFloors(towerId, selectedFloor = null) {
+        $('#floor_id').empty().append('<option value="">Select Floor</option>');
+
+        if (!towerId) return;
+
+        let tower = towers.find(t => t.id == towerId);
+        if (tower && tower.floors) {
+            tower.floors.forEach(floor => {
+                let selected = (floor.id == selectedFloor) ? 'selected' : '';
+                $('#floor_id').append('<option value="' + floor.id + '" ' + selected + '>' + floor.floor_name + '</option>');
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        // On change of tower dropdown
+        $('#tower_id').on('change', function() {
+            populateFloors($(this).val());
+        });
+
+        // Pre-populate for edit or validation error
+        let oldTower = "{{ old('tower_id', $apartment->tower_id) }}";
+        let oldFloor = "{{ old('floor_id', $apartment->floor_id) }}";
+
+        if (oldTower) {
+            populateFloors(oldTower, oldFloor);
+            $('#tower_id').val(oldTower); // ensure tower is selected
+        }
     });
 </script>

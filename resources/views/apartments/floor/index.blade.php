@@ -62,7 +62,7 @@
                                                 <td>
                                                     <div class="btn-group" role="group">
 
-                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editFLoorModal"><i class="fas fa-pencil-alt"></i></button>
+                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editFLoorModal{{ $floor->id }}"><i class="fas fa-pencil-alt"></i></button>
 
                                                         <form action="{{ route('floors.destroy', $floor->id) }}" method="POST" style="display: inline;">
                                                             @csrf
@@ -87,5 +87,7 @@
     </section>
     {{-- End main section --}}
     @include('apartments.floor.create')
-    @include('apartments.floor.edit')
+     @foreach ($floors as $key => $floor)
+        @include('apartments.floor.edit', ['floor' => $floor])
+    @endforeach
 @endsection

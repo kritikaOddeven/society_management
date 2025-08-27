@@ -53,18 +53,19 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="aparmtent_number">Apartment Number <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('aparmtent_number') is-invalid @enderror" id="aparmtent_number" name="aparmtent_number" value="{{ old('aparmtent_number') }}" placeholder="aparmtent">
-                                            @error('aparmtent_number')
+                                            <label for="apartment_number">Apartment Number <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('apartment_number') is-invalid @enderror" id="apartment_number" name="apartment_number" value="{{ old('apartment_number') }}" placeholder="aparmtent">
+                                            @error('apartment_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
 
+
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="parking">Select Parking Code</label>
-                                            <select class="form-control @error('parking') is-invalid @enderror" id="parking" name="parking_code" required>
+                                            <select class="form-control @error('parking') is-invalid @enderror" id="parking" name="parking_code">
                                                 <option value="">Select Parking Code</option>
                                                 {{-- @foreach ($parkings as $parking)
                                                     <option value="{{ $parking->parking_code }}" {{ old('parking_code') == $parking->parking_code ? 'selected' : '' }}>
@@ -84,11 +85,12 @@
                                         </div>
                                     </div>
 
+
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="aparmtent_area">Apartment Area(sqft) <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('aparmtent_area') is-invalid @enderror" id="aparmtent_area" name="aparmtent_area" value="{{ old('aparmtent_area') }}" placeholder="aparmtent">
-                                            @error('aparmtent_area')
+                                            <label for="apartment_area">Apartment Area(sqft) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('apartment_area') is-invalid @enderror" id="apartment_area" name="apartment_area" value="{{ old('apartment_area') }}" placeholder="aparmtent">
+                                            @error('apartment_area')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -101,7 +103,7 @@
                                             <select class="form-control @error('apartment_type') is-invalid @enderror" id="apartment_type" name="apartment_type" required>
                                                 <option value="">Select Apartment type</option>
                                                 @foreach ($types as $type)
-                                                    <option value="{{ $type->apartment_type }}" {{ old('apartment_type') == $type->apartment_type ? 'selected' : '' }}>
+                                                    <option value="{{ $type->id }}" {{ old('apartment_type') == $type->id ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $type->apartment_type)) }}
                                                     </option>
                                                 @endforeach
@@ -113,14 +115,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="apartment_status">Status</label>
-                                            <select class="form-control @error('apartment_status') is-invalid @enderror" id="apartment_status" name="apartment_status">
+                                            <label for="apartment_status">Apartment Status</label>
+                                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status">
                                                 <option value=""> Select Apartment Status</option>
-                                                <option value="unsold" {{ old('apartment_status') == 'unsold' ? 'selected' : '' }}>Unsold</option>
-                                                <option value="occupied" {{ old('apartment_status') == 'occupied' ? 'selected' : '' }}>Occupied</option>
-                                                <option value="rent" {{ old('apartment_status') == 'rent' ? 'selected' : '' }}>Avaiable For Rent</option>
+                                                <option value="Unsold" {{ old('status') == 'Unsold' ? 'selected' : '' }}>Unsold</option>
+                                                <option value="Occupied" {{ old('status') == 'Occupied' ? 'selected' : '' }}>Occupied</option>
+                                                <option value="Rent" {{ old('status') == 'Rent' ? 'selected' : '' }}>Avaiable For Rent</option>
                                             </select>
-                                            @error('apartment_status')
+                                            @error('status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
