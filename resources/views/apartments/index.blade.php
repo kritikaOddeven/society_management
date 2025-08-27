@@ -63,18 +63,20 @@
                                         @foreach ($apartments as $key => $apartment)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
-                                                
-                                                <td>{{ $apartment->apartment_number  }}</td>
+
+                                                <td>{{ $apartment->apartment_number }}</td>
                                                 <td>{{ $apartment->apartment_area }}</td>
-                                                <td>{{ $apartment->type->apartment_type  }}</td>
+                                                <td>{{ $apartment->type->apartment_type }}</td>
                                                 <td>
-                                                    @if ($apartment->status)
+                                                    @if ($apartment->status === 'Occupied')
                                                         <span class="badge badge-success">Occupied</span>
-                                                    @else
-                                                        <span class="badge badge-danger">Not Sold</span>
+                                                    @elseif ($apartment->status === 'Unsold')
+                                                        <span class="badge badge-danger">Unsold</span>
+                                                    @elseif ($apartment->status === 'Rent')
                                                         <span class="badge badge-primary">On Rent</span>
                                                     @endif
                                                 </td>
+
                                                 <td>{{ $apartment->tower->tower_name }}</td>
 
                                                 <td>{{ $apartment->floor->floor_name }}</td>
