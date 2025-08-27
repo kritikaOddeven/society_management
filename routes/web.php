@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\ApartmentController;
+use App\Http\Controllers\ApartmentTypeController;
 use App\Http\Controllers\FloorController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\ParkingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TowerController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ApartmentTypeController;
-use App\Http\Controllers\ParkingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -61,4 +61,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('types', ApartmentTypeController::class);
     // Route::prefix('settings')->as('settings.')->group(function () {
     // });
+
 });

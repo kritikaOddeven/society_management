@@ -13,4 +13,10 @@ class Floor extends Model
         return $this->belongsTo(Tower::class);
     }
 
+    public function apartments()
+{
+    return $this->hasMany(Apartment::class);
+}
+
+
 }

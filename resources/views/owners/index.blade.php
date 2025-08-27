@@ -60,7 +60,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($owners as $key => $owner)
+                                        @foreach ($owners as $key => $owner)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
                                                 <td>
@@ -68,11 +68,11 @@
                                                         <img src="{{ asset($owner->profile_image) }}" alt="Profile" class="rounded-circle" width="40" height="40">
                                                     @else
                                                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                            {{ strtoupper(substr($owner->full_name ?? $user->name, 0, 1)) }}
+                                                            {{ strtoupper(substr($owner->name ?? $user->name, 0, 1)) }}
                                                         </div>
                                                     @endif
                                                 </td>
-                                                <td>{{ $owner->full_name }}</td>
+                                                <td>{{ $owner->name }}</td>
                                                 <td>{{ $owner->email }}</td>
                                                 <td>
                                                     @if ($owner->phone_number)
@@ -88,7 +88,7 @@
                                                         <span class="badge badge-danger">Inactive</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $owner->apartment_number }}</td>
+                                                <td>{{ $owner->apartment->apartment_number ?? '-'}}</td>
 
                                                 <td>
                                                     <div class="btn-group" role="group">
@@ -107,7 +107,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

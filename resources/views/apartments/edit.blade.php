@@ -59,15 +59,15 @@
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="parking">Select Parking Code</label>
-                                            <select class="form-control @error('parking') is-invalid @enderror" id="parking" name="parking_code" >
+                                            <select class="form-control select2 @error('parking_id') is-invalid @enderror" id="parking" name="parking_id[]" multiple>
                                                 <option value="">Select Parking Code</option>
-                                                {{-- @foreach ($parkings as $parking)
-                                                    <option value="{{ $parking->parking_code }}" {{ old('parking_code') == $parking->parking_code ? 'selected' : '' }}>
+                                                @foreach ($parkings as $parking)
+                                                    <option value="{{ $parking->id }}" {{ in_array($parking->id, old('id', $selectedParkings ?? [])) ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $parking->parking_code)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
-                                            @error('parking_code')
+                                            @error('parking_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -109,10 +109,11 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="status">Apartmeent Status</label>
-                                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status">
+                                            <select class="form-control @error('status') is-invalid @enderror" id="apartment_status" name="status">
                                                 <option value="Unsold" {{ old('status', $apartment->status) == 'Unsold' ? 'selected' : '' }}>Unsold</option>
                                                 <option value="Occupied" {{ old('status', $apartment->status) == 'Occupied' ? 'selected' : '' }}>Occupied</option>
-                                                <option value="Rent" {{ old('status', $apartment->status) == 'Rent' ? 'selected' : '' }}>Rent</option>
+                                                <option value="Rent" {{ old('status', $apartment->status) == 'Rent' ? 'selected' : '' }}>Avaiable For Rent</option>
+                                                <option value="Rent" {{ old('status', $apartment->status) == 'Rented' ? 'selected' : '' }}>Rented</option>
                                             </select>
                                             @error('status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -122,16 +123,17 @@
 
                                     <div class="col-md-6" id="owner_div" style="display: none;">
                                         <div class="form-group">
-                                            <label for="owner_name">Select Owner <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('owner_name') is-invalid @enderror" id="owner_name" name="owner_name" required>
+                                            <label for="owner_id">Select Owner <span class="text-danger">*</span></label>
+                                            <select class="form-control @error('owner_id') is-invalid @enderror" id="owner_id" name="owner_id" required>
                                                 <option value=""> Select Owner</option>
-                                                {{-- @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->owner_name }}" {{ old('owner_name') == $owner->owner_name ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $owner->owner_name)) }}
+                                                @foreach ($owners as $owner)
+                                                    <option value="{{ $owner->id }}" {{ isset($apartment) && $apartment->owner_id == $owner->id ? 'selected' : '' }}>
+                                                        {{ ucfirst(str_replace('-', ' ', $owner->name)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
+
                                             </select>
-                                            @error('owner_name')
+                                            @error('owner_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -157,17 +159,17 @@
 <script>
     $(document).ready(function() {
         function toggleOwnerDiv() {
-            let status = $('#apartment_status').val();
+            let status = $('#apartment_status').val(); // get current apartment status
             if (status === 'Occupied' || status === 'Rent') {
-                $('#owner_div').show();
-                $('#owner_name').attr('required', true);
+                $('#owner_div').show(); // show owner div
+                $('#owner_name').attr('required', true); // make owner required
             } else {
-                $('#owner_div').hide();
-                $('#owner_name').attr('required', false);
+                $('#owner_div').hide(); // hide owner div
+                $('#owner_name').attr('required', false); // remove required
             }
         }
 
-        // Run on page load
+        // Run on load (important for edit page)
         toggleOwnerDiv();
 
         // Run on change
@@ -175,6 +177,7 @@
             toggleOwnerDiv();
         });
     });
+
 
 
     let towers = @json($towers);

@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('assets/modules/weather-icon/css/weather-icons-wind.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
 
+    <link rel="stylesheet" href="{{asset('assets/modules/select2/dist/css/select2.min.css')}}">
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
@@ -56,28 +58,31 @@
     </div>
 
     <!-- General JS Scripts -->
-    <script src="assets/modules/jquery.min.js"></script>
-    <script src="assets/modules/popper.js"></script>
-    <script src="assets/modules/tooltip.js"></script>
-    <script src="assets/modules/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/modules/nicescroll/jquery.nicescroll.min.js"></script>
-    <script src="assets/modules/moment.min.js"></script>
-    <script src="assets/js/stisla.js"></script>
+    <script src="{{asset('assets/modules/jquery.min.js')}}"></script>
+    <script src="{{asset('assets/modules/popper.js')}}"></script>
+    <script src="{{asset('assets/modules/tooltip.js')}}"></script>
+    <script src="{{asset('assets/modules/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets/modules/nicescroll/jquery.nicescroll.min.js')}}"></script>
+    <script src="{{asset('assets/modules/moment.min.js')}}"></script>
+    <script src="{{asset('assets/js/stisla.js')}}"></script>
 
     <!-- JS Libraies -->
-    <script src="assets/modules/simple-weather/jquery.simpleWeather.min.js"></script>
-    <script src="assets/modules/chart.min.js"></script>
-    <script src="assets/modules/jqvmap/dist/jquery.vmap.min.js"></script>
-    <script src="assets/modules/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-    <script src="assets/modules/summernote/summernote-bs4.js"></script>
-    <script src="assets/modules/chocolat/dist/js/jquery.chocolat.min.js"></script>
+    <script src="{{asset('assets/modules/simple-weather/jquery.simpleWeather.min.js')}}"></script>
+    <script src="{{asset('assets/modules/chart.min.js')}}"></script>
+    <script src="{{asset('assets/modules/jqvmap/dist/jquery.vmap.min.js')}}"></script>
+    <script src="{{asset('assets/modules/jqvmap/dist/maps/jquery.vmap.world.js')}}"></script>
+    <script src="{{asset('assets/modules/summernote/summernote-bs4.js')}}"></script>
+    <script src="{{asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js')}}"></script>
+    
+  <script src="{{asset('assets/modules/select2/dist/js/select2.full.min.js')}}"></script>
+  <script src="{{asset('assets/modules/jquery-selectric/jquery.selectric.min.js')}}"></script>
 
     <!-- Page Specific JS File -->
-    <script src="assets/js/page/index-0.js"></script>
+    <script src="{{asset('assets/js/page/index-0.js')}}"></script>
 
     <!-- Template JS File -->
-    <script src="assets/js/scripts.js"></script>
-    <script src="assets/js/custom.js"></script>
+    <script src="{{asset('assets/js/scripts.js')}}"></script>
+    <script src="{{asset('assets/js/custom.js')}}"></script>
 </body>
 
 </html>

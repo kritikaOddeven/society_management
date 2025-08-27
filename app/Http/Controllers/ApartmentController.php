@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Apartment;
 use App\Models\ApartmentType;
 use App\Models\Tower;
+use App\Models\Parking;
+use App\Models\Owner;
 use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
@@ -18,7 +20,9 @@ class ApartmentController extends Controller
     {
         $towers = Tower::with('floors')->orderBy('tower_name')->get();
         $types  = ApartmentType::orderBy('apartment_type')->get();
-        return view('apartments.create', compact('towers', 'types'));
+        $parkings  = Parking::orderBy('parking_code')->get();
+        $owners  = Owner::orderBy('name')->get();
+        return view('apartments.create', compact('towers', 'types', 'parkings', 'owners'));
     }
 
     public function store(Request $request)
@@ -40,6 +44,8 @@ class ApartmentController extends Controller
         $apartment->apartment_area   = $request->apartment_area;
         $apartment->apartment_type   = $request->apartment_type;
         $apartment->status           = $request->status;
+        $apartment->parking_id           = $request->parking_id;
+        $apartment->owner_id           = $request->owner_id;
         $apartment->save();
         // dd($apartment);
 
@@ -50,8 +56,9 @@ class ApartmentController extends Controller
     {
         $towers = Tower::with('floors')->orderBy('tower_name')->get();
         $types  = ApartmentType::orderBy('apartment_type')->get();
-
-        return view('apartments.edit', compact('apartment', 'towers', 'types'));
+        $parkings  = Parking::where('status', 'Available')->get();
+        $owners  = Owner::orderBy('name')->get();
+        return view('apartments.edit', compact('apartment', 'towers', 'types', 'parkings', 'owners'));
     }
 
     public function update(Request $request, $id)
@@ -73,6 +80,8 @@ class ApartmentController extends Controller
         $apartment->apartment_area   = $request->apartment_area;
         $apartment->apartment_type   = $request->apartment_type;
         $apartment->status           = $request->status;
+        $apartment->parking_id           = $request->parking_id;
+        $apartment->owner_id           = $request->owner_id;
         $apartment->save();
         // dd($apartment);
 

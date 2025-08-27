@@ -73,6 +73,8 @@
                                                     @elseif ($apartment->status === 'Unsold')
                                                         <span class="badge badge-danger">Unsold</span>
                                                     @elseif ($apartment->status === 'Rent')
+                                                        <span class="badge badge-warning">Available For Rent</span>
+                                                    @elseif ($apartment->status === 'Rented')
                                                         <span class="badge badge-primary">On Rent</span>
                                                     @endif
                                                 </td>

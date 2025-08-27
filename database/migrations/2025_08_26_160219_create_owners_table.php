@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('country_code', 10)->default('+93');
             $table->string('profile_image')->nullable();
-             $table->foreignId('tower_id')->constrained('towers')->onDelete('cascade');
-            $table->foreignId('floor_id')->constrained('floors')->onDelete('cascade');
-            $table->foreignId('apartment_id')->constrained('apartments')->onDelete('cascade');
+            $table->boolean('status')->default(true);
+             $table->foreignId('tower_id')->nullable()->constrained('towers')->onDelete('cascade');
+            $table->foreignId('floor_id')->nullable()->constrained('floors')->onDelete('cascade');
+            $table->foreignId('apartment_id')->nullable()->constrained('apartments')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -24,17 +24,17 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="full_name">Full Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" value="{{ old('full_name') }}" required>
-                                            @error('full_name')
+                                            <label for="name">Full Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
+                                            @error('name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="email">Email Address <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                            <label for="email">Email Address </label>
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" >
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -42,7 +42,7 @@
                                     </div>
 
                                     <div class="col-md-1">
-                                         <div class="form-group">
+                                        <div class="form-group">
                                             <label for="country_code">Country Code</label>
                                             <select class="form-control @error('country_code') is-invalid @enderror" id="country_code" name="country_code">
                                                 <option value="+91" {{ old('country_code') == '+91' ? 'selected' : '' }}>+91 </option>
@@ -54,7 +54,7 @@
                                                 <option value="+49" {{ old('country_code') == '+49' ? 'selected' : '' }}>+49 </option>
                                                 <option value="+33" {{ old('country_code') == '+33' ? 'selected' : '' }}>+33 </option>
                                                 <option value="+39" {{ old('country_code') == '+39' ? 'selected' : '' }}>+39 </option>
-                                                <option value="+34" {{ old('country_code') == '+34' ? 'selected' : '' }}>+34    </option>
+                                                <option value="+34" {{ old('country_code') == '+34' ? 'selected' : '' }}>+34 </option>
                                             </select>
                                             @error('country_code')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -63,7 +63,7 @@
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group">
-                                            <label for="phone_number">Phone Number</label>
+                                            <label for="phone_number">Phone Number<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" placeholder="Phone">
                                             @error('phone_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -86,45 +86,37 @@
 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="tower_name">Select Tower <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('tower_name') is-invalid @enderror" id="tower_name" name="tower_name" required>
+                                            <label for="tower_id">Select Tower</label>
+                                            <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id">
                                                 <option value="">Select Tower Name</option>
-                                                {{-- @foreach ($towers as $tower)
-                                                    <option value="{{ $tower->tower_name }}" {{ old('tower') == $tower->tower_name ? 'selected' : '' }}>
+                                                @foreach ($towers as $tower)
+                                                    <option value="{{ $tower->id }}" {{ old('tower_id') == $tower->id ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $tower->tower_name)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="floor">Select Floor <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('floor') is-invalid @enderror" id="floor" name="floor" required>
+                                            <label for="floor_id">Select Floor</label>
+                                            <select class="form-control @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id">
                                                 <option value="">Select Floor</option>
-                                                {{-- @foreach ($floors as $floor)
-                                                    <option value="{{ $floor->floor }}" {{ old('floor') == $floor->floor ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $floor->floor)) }}
-                                                    </option>
-                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="apartment">Select Apartment <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('apartment') is-invalid @enderror" id="apartment" name="apartment" required>
+                                            <label for="apartment_id">Select Apartment</label>
+                                            <select class="form-control @error('apartment_id') is-invalid @enderror" id="apartment_id" name="apartment_id">
                                                 <option value="">Select Apartment</option>
-                                                {{-- @foreach ($apartments as $apartment)
-                                                    <option value="{{ $apartment->aparmtent_number }}" {{ old('aparmtent_number') == $apartment->aparmtent_number ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $apartment->aparmtent_number)) }}
-                                                    </option>
-                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
+
+
                                 </div>
 
                                 <div class="form-group d-flex justify-content-end">
@@ -141,6 +133,63 @@
     </section>
     {{-- End main section --}}
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    let towers = @json($towers);
+
+    // console.log(towers);
+    // Populate Floors based on Tower
+    $(document).ready(function() {
+        $('#tower_id').on('change', function() {
+            let towerId = $(this).val();
+            console.log("Selected Tower ID:", towerId);
+
+            $('#floor_id').empty().append('<option value="">Select Floor</option>');
+            $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
+
+            if (towerId) {
+                let selectedTower = towers.find(t => t.id == towerId);
+                // console.log("Selected Tower:", selectedTower);
+
+                if (selectedTower && selectedTower.floors) {
+                    selectedTower.floors.forEach(floor => {
+                        $('#floor_id').append(
+                            `<option value="${floor.id}">${floor.floor_name}</option>`
+                        );
+                    });
+                }
+            }
+        });
+    });
+
+    // Populate Apartments based on Floor
+    $(document).ready(function() {
+        $('#floor_id').on('change', function() {
+            let towerId = $('#tower_id').val();
+            let floorId = $(this).val();
+
+            console.log("Floor ID:", floorId);
+
+            $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
+
+            if (towerId && floorId) {
+                let selectedTower = towers.find(t => t.id == towerId);
+                if (selectedTower && selectedTower.floors) {
+                    let selectedFloor = selectedTower.floors.find(f => f.id == floorId);
+                    if (selectedFloor && selectedFloor.apartments) {
+                        selectedFloor.apartments.forEach(apartment => {
+                            $('#apartment_id').append(
+                                `<option value="${apartment.id}">${apartment.apartment_number}</option>`
+                            );
+                        });
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 
 @push('scripts')
     <script>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('apartment_number');
             $table->string('apartment_area'); // could be int if only numbers
             $table->foreignId('apartment_type')->nullable()->constrained('apartment_types')->onDelete('set null');
-            $table->enum('status', ['Unsold', 'Occupied', 'Rent'])->default('Unsold');
+            $table->enum('status', ['Unsold', 'Occupied', 'Rent','Rented'])->default('Unsold');
             $table->timestamps();
         });
     }

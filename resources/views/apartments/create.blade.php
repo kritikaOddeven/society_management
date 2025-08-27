@@ -65,15 +65,15 @@
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="parking">Select Parking Code</label>
-                                            <select class="form-control @error('parking') is-invalid @enderror" id="parking" name="parking_code">
+                                            <select class="form-control select2 @error('parking_id') is-invalid @enderror" id="parking_id" name="parking_id" multiple="">
                                                 <option value="">Select Parking Code</option>
-                                                {{-- @foreach ($parkings as $parking)
-                                                    <option value="{{ $parking->parking_code }}" {{ old('parking_code') == $parking->parking_code ? 'selected' : '' }}>
+                                                @foreach ($parkings as $parking)
+                                                    <option value="{{ $parking->id }}" {{ old('id') == $parking->id ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $parking->parking_code)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
-                                            @error('parking_code')
+                                            @error('parking_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -81,7 +81,7 @@
 
                                     <div class="col-md-1 mt-4 p-2">
                                         <div class="form-group">
-                                            <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addParkingModal"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addParkingModal"><i class="fas fa-plus"></i> Add Parking</button>
                                         </div>
                                     </div>
 
@@ -116,7 +116,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="apartment_status">Apartment Status</label>
-                                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status">
+                                            <select class="form-control @error('status') is-invalid @enderror" id="apartment_status" name="status">
                                                 <option value=""> Select Apartment Status</option>
                                                 <option value="Unsold" {{ old('status') == 'Unsold' ? 'selected' : '' }}>Unsold</option>
                                                 <option value="Occupied" {{ old('status') == 'Occupied' ? 'selected' : '' }}>Occupied</option>
@@ -133,11 +133,11 @@
                                             <label for="owner_name">Select Owner <span class="text-danger">*</span></label>
                                             <select class="form-control @error('owner_name') is-invalid @enderror" id="owner_name" name="owner_name" required>
                                                 <option value=""> Select Owner</option>
-                                                {{-- @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->owner_name }}" {{ old('owner_name') == $owner->owner_name ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $owner->owner_name)) }}
+                                                @foreach ($owners as $owner)
+                                                    <option value="{{ $owner->id }}" {{ old('id') == $owner->id ? 'selected' : '' }}>
+                                                        {{ ucfirst(str_replace('-', ' ', $owner->name)) }}
                                                     </option>
-                                                @endforeach --}}
+                                                @endforeach
                                             </select>
                                             @error('owner_name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -159,6 +159,8 @@
         </div>
     </section>
     {{-- End main section --}}
+
+    {{-- @include('apartments.parking.create') --}}
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -166,7 +168,7 @@
     $(document).ready(function() {
         function toggleOwnerDiv() {
             let status = $('#apartment_status').val();
-            if (status === 'occupied' || status === 'rent') {
+            if (status === 'Occupied' || status === 'Rent') {
                 $('#owner_div').show();
                 $('#owner_name').attr('required', true); // make owner required
             } else {
