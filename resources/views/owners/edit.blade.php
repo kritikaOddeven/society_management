@@ -44,7 +44,7 @@
 
                                     <div class="col-md-1">
                                         <div class="form-group">
-                                            <label for="country_code">Country Code</label>
+                                            {{-- <label for="country_code">Country Code</label> --}}
                                             <select class="form-control @error('country_code') is-invalid @enderror" id="country_code" name="country_code">
                                                 @foreach (['+91', '+93', '+1', '+44', '+86', '+81', '+49', '+33', '+39', '+34'] as $code)
                                                     <option value="{{ $code }}" {{ old('country_code', $owner->country_code) == $code ? 'selected' : '' }}>{{ $code }}</option>
