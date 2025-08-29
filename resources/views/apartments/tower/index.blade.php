@@ -55,10 +55,13 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($towers as $key => $tower)
+                                        @php
+                                            $apart_count = App\Models\Apartment::where('tower_id', $tower->id)->count();
+                                        @endphp
                                             <tr>
                                                 <td>{{ ++$key }}</td>
                                                 <td>{{ $tower->tower_name }}</td>
-                                                <td>{{ $tower->apartment_no ?? '' }}</td>
+                                                <td>{{ $apart_count ?? '--' }}</td>
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                         <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editTowerModal{{ $tower->id }}"><i class="fas fa-pencil-alt"></i></button>

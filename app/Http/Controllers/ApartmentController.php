@@ -63,6 +63,7 @@ class ApartmentController extends Controller
         $apartment->owner_id         = $request->owner_id;
         $apartment->save();
 
+        
         // Loop through parking IDs and update their status
         if($request->has('parking_id') && $request->parking_id){
             foreach ($request->parking_id as $parkingId) {
