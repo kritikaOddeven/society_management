@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::table('apartments', function (Blueprint $table) {
             $table->foreignId('owner_id')->nullable()->constrained('owners')->onDelete('set null')->after('status');
-
-            
-            $table->foreignId('parking_id')->nullable()->constrained('parkings')->onDelete('set null')->after('status');
+            $table->string('parking_id')->nullable()->after('status');
         });
     }
 
@@ -27,8 +25,6 @@ return new class extends Migration
         Schema::table('apartments', function (Blueprint $table) {
             $table->dropForeign(['owner_id']);
             $table->dropColumn('owner_id');
-
-            $table->dropForeign(['parking_id']);
             $table->dropColumn('parking_id');
         });
     }

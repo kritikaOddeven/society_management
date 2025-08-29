@@ -1,71 +1,71 @@
 <div class="main-sidebar sidebar-style-2">
-                <aside id="sidebar-wrapper">
-                    <div class="sidebar-brand">
-                        <a href="{{ route('dashboard') }}">Society Management</a>
-                    </div>
-                    <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="{{ route('dashboard') }}">SM</a>
-                    </div>
-                    <ul class="sidebar-menu">
-                        <li><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
-                        
-                        @can('user.view')
-                        <li><a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i> <span>Users Management</span></a></li>
-                        @endcan
+    <aside id="sidebar-wrapper">
+        <div class="sidebar-brand">
+            <a href="{{ route('dashboard') }}">Society Management</a>
+        </div>
+        <div class="sidebar-brand sidebar-brand-sm">
+            <a href="{{ route('dashboard') }}">SM</a>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
 
-                        <li><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
+            @can('user.view')
+                <li><a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i> <span>Users Management</span></a></li>
+            @endcan
 
-                         <li class="dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="fas fa-th"></i></i> <span>Tenant</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="">Tenant</a></li>
-                                <li><a class="nav-link" href="">Rent</a></li>
-                            </ul>
-                        </li>
+            <li><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
 
-                        <li class="dropdown">
-                            <a href="" class="nav-link has-dropdown"><i class="fa-regular fa-building"></i></i> <span>Apartment</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="{{ route('towers.index') }}">Tower</a></li>
-                                <li><a class="nav-link" href="{{ route('floors.index') }}">Floor</a></li>
-                                <li><a class="nav-link" href="{{ route('apartments.index') }}">Apartment</a></li>
-                                <li><a class="nav-link" href="{{ route('parkings.index') }}">Parking</a></li>
-                            </ul>
-                        </li>
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-th"></i></i> <span>Tenant</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="">Tenant</a></li>
+                    <li><a class="nav-link" href="">Rent</a></li>
+                </ul>
+            </li>
 
-                         <li class="dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i> <span>Amenities</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="">Amenities</a></li>
-                                {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
-                            </ul>
-                        </li>
+            <li class="dropdown {{ Request()->is(['towers*', 'floors*', 'apartments*', 'parkings*']) ? 'active' : '' }}">
+                <a href="" class="nav-link has-dropdown"><i class="fa-regular fa-building"></i></i> <span>Apartment</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request()->is('towers') ? 'active' : '' }}"><a class="nav-link" href="{{ route('towers.index') }}">Tower</a></li>
+                    <li class="{{ Request()->is('floors') ? 'active' : '' }}"><a class="nav-link" href="{{ route('floors.index') }}">Floor</a></li>
+                    <li class="{{ Request()->is('apartments') ? 'active' : '' }}"><a class="nav-link" href="{{ route('apartments.index') }}">Apartment</a></li>
+                    <li class="{{ Request()->is('parkings') ? 'active' : '' }}"><a class="nav-link" href="{{ route('parkings.index') }}">Parking</a></li>
+                </ul>
+            </li>
 
-                        <li class="dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Bills</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="">Maintenance</a></li>
-                            </ul>
-                        </li>
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i> <span>Amenities</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="">Amenities</a></li>
+                    {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
+                </ul>
+            </li>
 
-                        <li><a class="nav-link" href="blank.html"><i class="fas fa-calendar"></i> <span>Events</span></a></li>
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Bills</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="">Maintenance</a></li>
+                </ul>
+            </li>
 
-                        <li class="dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Report</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="">Maintenance Report</a></li>
-                            </ul>
-                        </li>
+            <li><a class="nav-link" href="blank.html"><i class="fas fa-calendar"></i> <span>Events</span></a></li>
 
-                        <li class="dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="{{ route('types.index')}}">Apartment Type</a></li>
-                                {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
-                            </ul>
-                        </li>
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Report</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="">Maintenance Report</a></li>
+                </ul>
+            </li>
 
-                        {{--<li class="dropdown">
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('types.index') }}">Apartment Type</a></li>
+                    {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
+                </ul>
+            </li>
+
+            {{-- <li class="dropdown">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-map-marker-alt"></i> <span>Google
                                     Maps</span></a>
                             <ul class="dropdown-menu">
@@ -136,15 +136,15 @@
                         </li>
                         <li><a class="nav-link" href="credits.html"><i class="fas fa-pencil-ruler"></i> <span>Credits</span></a>
                         </li> --}}
-                    </ul>
+        </ul>
 
-                    <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </button>
-                        </form>
-                    </div>
-                </aside>
-            </div>
+        <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-primary btn-lg btn-block btn-icon-split">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+</div>

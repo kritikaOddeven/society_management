@@ -33,7 +33,7 @@ class ParkingController extends Controller
         $parking->save();
         // dd($parking);
 
-        return redirect()->route('parkings.index')->with('success', 'Parking created successfully.');
+        return redirect()->back()->with('success', 'Parking created successfully.');
     }
 
      public function update(Request $request, $id)

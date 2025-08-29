@@ -3,26 +3,42 @@ namespace App\Http\Controllers;
 
 use App\Models\Apartment;
 use App\Models\ApartmentType;
-use App\Models\Tower;
-use App\Models\Parking;
+use App\Models\Floor;
 use App\Models\Owner;
+use App\Models\Parking;
+use App\Models\Tower;
 use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
 {
+
+    public function __construct(Apartment $apartment)
+    {
+        $this->apartment = $apartment;
+    }
+
     public function index()
     {
-        $apartments = Apartment::with(['tower', 'floor', 'type'])->latest()->get();
+        $apartments = $this->apartment
+            ->with(['tower', 'floor', 'type'])
+            ->latest()
+            ->get();
         return view('apartments.index', compact('apartments'));
     }
 
     public function create()
     {
-        $towers = Tower::with('floors')->orderBy('tower_name')->get();
-        $types  = ApartmentType::orderBy('apartment_type')->get();
-        $parkings  = Parking::orderBy('parking_code')->get();
-        $owners  = Owner::orderBy('name')->get();
-        return view('apartments.create', compact('towers', 'types', 'parkings', 'owners'));
+        $towers     = Tower::with('floors')->orderBy('tower_name')->get();
+        $types      = ApartmentType::orderBy('apartment_type')->get();
+        $parkings   = Parking::orderBy('parking_code')->get();
+        $owners     = Owner::orderBy('name')->get();
+        $apartments = $this->apartment
+            ->with(['tower', 'floor', 'type'])
+            ->latest()
+            ->get();
+        $floors = Floor::with('tower')->latest()->get();
+
+        return view('apartments.create', compact('towers', 'types', 'parkings', 'owners', 'apartments', 'floors'));
     }
 
     public function store(Request $request)
@@ -35,7 +51,6 @@ class ApartmentController extends Controller
             'apartment_type'   => 'required',
             'status'           => 'nullable',
         ]);
-        // dd($request->all());
 
         $apartment                   = new Apartment();
         $apartment->tower_id         = $request->tower_id;
@@ -44,20 +59,26 @@ class ApartmentController extends Controller
         $apartment->apartment_area   = $request->apartment_area;
         $apartment->apartment_type   = $request->apartment_type;
         $apartment->status           = $request->status;
-        $apartment->parking_id           = $request->parking_id;
-        $apartment->owner_id           = $request->owner_id;
+        $apartment->parking_id       = $request->parking_id ? json_encode($request->parking_id) : '';
+        $apartment->owner_id         = $request->owner_id;
         $apartment->save();
-        // dd($apartment);
+
+        // Loop through parking IDs and update their status
+        if($request->has('parking_id') && $request->parking_id){
+            foreach ($request->parking_id as $parkingId) {
+                Parking::where('id', $parkingId)->update(['status' => 'Occupied', 'apartment_id' => $apartment->id]);
+            }
+        }
 
         return redirect()->route('apartments.index')->with('success', 'Apartment created successfully.');
     }
 
     public function edit(Apartment $apartment)
     {
-        $towers = Tower::with('floors')->orderBy('tower_name')->get();
-        $types  = ApartmentType::orderBy('apartment_type')->get();
-        $parkings  = Parking::where('status', 'Available')->get();
-        $owners  = Owner::orderBy('name')->get();
+        $towers   = Tower::with('floors')->orderBy('tower_name')->get();
+        $types    = ApartmentType::orderBy('apartment_type')->get();
+        $parkings = Parking::where('status', 'Available')->get();
+        $owners   = Owner::orderBy('name')->get();
         return view('apartments.edit', compact('apartment', 'towers', 'types', 'parkings', 'owners'));
     }
 
@@ -80,18 +101,18 @@ class ApartmentController extends Controller
         $apartment->apartment_area   = $request->apartment_area;
         $apartment->apartment_type   = $request->apartment_type;
         $apartment->status           = $request->status;
-        $apartment->parking_id           = $request->parking_id;
-        $apartment->owner_id           = $request->owner_id;
+        $apartment->parking_id       = $request->parking_id;
+        $apartment->owner_id         = $request->owner_id;
         $apartment->save();
         // dd($apartment);
 
         return redirect()->route('apartments.index')->with('success', 'Apartment updated successfully.');
     }
 
-     public function destroy(Apartment $apartment)
+    public function destroy(Apartment $apartment)
     {
         $apartment->delete();
-        return redirect()->route('apartments.index')->with('success','Apartment deleted successfully.');
+        return redirect()->route('apartments.index')->with('success', 'Apartment deleted successfully.');
     }
 
 }

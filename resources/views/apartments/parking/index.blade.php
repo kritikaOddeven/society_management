@@ -63,7 +63,7 @@
                                                 <td>
                                                     @if ($parking->status === 'Available')
                                                         <span class="badge bg-success">Available</span>
-                                                    @elseif ($parking->status === 'Alloted')
+                                                    @elseif ($parking->status === 'Occupied')
                                                         <span class="badge bg-warning">Alloted</span>
                                                     @endif
                                                 </td>
