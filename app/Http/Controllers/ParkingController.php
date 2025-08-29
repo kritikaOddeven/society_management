@@ -22,16 +22,14 @@ class ParkingController extends Controller
             'apartment_id' => 'nullable',
             'parking_code' => 'required',
             'floor_id'     => 'required',
-            'status'       => 'nullable',
         ]);
         // dd($request->all());
         $parking               = new Parking();
         $parking->apartment_id = $request->apartment_id;
         $parking->parking_code = $request->parking_code;
         $parking->floor_id     = $request->floor_id;
-        $parking->status       = $request->status ?? 'Available';
+        $parking->status       = $request->apartment_id ? 'Occupied' : 'Available';
         $parking->save();
-        // dd($parking);
 
         return redirect()->back()->with('success', 'Parking created successfully.');
     }
@@ -42,13 +40,13 @@ class ParkingController extends Controller
             'apartment_id' => 'nullable',
             'parking_code' => 'required',
             'floor_id'     => 'required',
-            'status'       => 'nullable',
         ]);
         $parking               = Parking::find($id);
         $parking->apartment_id = $request->apartment_id;
         $parking->parking_code = $request->parking_code;
         $parking->floor_id     = $request->floor_id;
-        $parking->status       = $request->status ?? 'Available';
+        $parking->status       = $request->apartment_id ? 'Occupied' : 'Available';
+
         // dd($parking);
         $parking->save();
 
