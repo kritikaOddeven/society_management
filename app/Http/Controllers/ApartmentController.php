@@ -106,7 +106,18 @@ class ApartmentController extends Controller
         $apartment->owner_id         = $request->owner_id;
         $apartment->save();
         // dd($apartment);
+        
+        //  Update Owner table also
+    if ($request->owner_id) {
+        $owner = Owner::find($request->owner_id);
 
+        if ($owner) {
+            $owner->tower_id     = $apartment->tower_id;
+            $owner->floor_id     = $apartment->floor_id;
+            $owner->apartment_id = $apartment->id; // link apartment id
+            $owner->save();
+        }
+    }
         return redirect()->route('apartments.index')->with('success', 'Apartment updated successfully.');
     }
 

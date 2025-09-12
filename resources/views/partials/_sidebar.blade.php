@@ -15,11 +15,11 @@
 
             <li><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
 
-            <li class="dropdown">
+            <li class="dropdown {{ Request()->is(['tenants*', 'rents*',]) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-th"></i></i> <span>Tenant</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="">Tenant</a></li>
-                    <li><a class="nav-link" href="">Rent</a></li>
+                    <li class="{{ Request()->is('tenants') ? 'active' : '' }}"><a class="nav-link" href="{{ route('tenants.index') }}">Tenant</a></li>
+                    <li class="{{ Request()->is('rents') ? 'active' : '' }}"><a class="nav-link" href="{{ route('rents.index') }}">Rent</a></li>
                 </ul>
             </li>
 
@@ -36,7 +36,7 @@
             <li class="dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i> <span>Amenities</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="">Amenities</a></li>
+                    <li><a class="nav-link"  href="{{ route('amenities.index') }}">Amenities</a></li>
                     {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
                 </ul>
             </li>

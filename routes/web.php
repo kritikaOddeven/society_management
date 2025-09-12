@@ -8,6 +8,8 @@ use App\Http\Controllers\ParkingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TowerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\AmenitieController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('floors', FloorController::class);
     Route::resource('apartments', ApartmentController::class);
     Route::resource('parkings', ParkingController::class);
+    Route::resource('amenities', AmenitieController::class);
+    Route::resource('tenants', TenantController::class);
+    Route::resource('rents', TenantController::class);
 
     Route::resource('types', ApartmentTypeController::class);
     // Route::prefix('settings')->as('settings.')->group(function () {
