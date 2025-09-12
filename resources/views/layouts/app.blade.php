@@ -44,6 +44,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- /END GA -->
 
     <style>
@@ -66,6 +68,28 @@
             @include('partials._sidebar')
             <!-- Main Content -->
             <div class="main-content">
+
+
+                {{-- Temp error --}}
+                @if ($errors->any())
+                    <script>
+                        Swal.fire({
+                            title: 'Validation Error!',
+                            html: `
+                                <ul style="text-align:left;">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            `,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    </script>
+                @endif
+
+                {{-- Temp error end --}}
+
                 @yield('main-content')
 
             </div>

@@ -55,6 +55,7 @@
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Status</th>
+                                            <th>Apartment number</th>
                                             <th style="width: 200px">Action</th>
                                         </tr>
                                     </thead>
