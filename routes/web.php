@@ -10,6 +10,7 @@ use App\Http\Controllers\TowerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\AmenitieController;
+use App\Http\Controllers\RentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('tenants/{tenant}/history', [TenantController::class, 'history'])->name('tenants.history');
     Route::get('tenants-history', [TenantController::class, 'allHistory'])->name('tenants.all-history');
     Route::resource('rents', TenantController::class);
+    Route::resource('rents', RentController::class);
 
     Route::resource('types', ApartmentTypeController::class);
     // Route::prefix('settings')->as('settings.')->group(function () {
