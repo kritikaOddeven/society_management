@@ -17,6 +17,9 @@
                         <div class="card-header d-md-flex justify-content-between">
                             <h4>Tenant Lists</h4>
                             <div>
+                                <a href="{{ route('tenants.all-history') }}" class="btn btn-info rounded mr-2">
+                                    <i class="fas fa-history"></i> All History
+                                </a>
                                 <a href="{{ route('tenants.create') }}" class="btn btn-primary rounded">
                                     <i class="fas fa-plus"></i> Add Tenant
                                 </a>
@@ -92,7 +95,10 @@
 
                                                 <td>
                                                     <div class="btn-group" role="group">
-
+                                                        <a href="{{ route('tenants.history', $tenant->id) }}" class="btn btn-info btn-sm mr-2" data-toggle="tooltip" title="History">
+                                                            <i class="fas fa-history"></i>
+                                                        </a>
+                                                        
                                                         <a href="{{ route('tenants.edit', $tenant->id) }}" class="btn btn-primary btn-sm mr-2" data-toggle="tooltip" title="Edit">
                                                             <i class="fas fa-pencil-alt"></i>
                                                         </a>

@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('parkings', ParkingController::class);
     Route::resource('amenities', AmenitieController::class);
     Route::resource('tenants', TenantController::class);
+    Route::get('tenants/{tenant}/history', [TenantController::class, 'history'])->name('tenants.history');
+    Route::get('tenants-history', [TenantController::class, 'allHistory'])->name('tenants.all-history');
     Route::resource('rents', TenantController::class);
 
     Route::resource('types', ApartmentTypeController::class);

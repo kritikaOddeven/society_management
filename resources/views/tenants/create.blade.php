@@ -124,8 +124,8 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="contract_start_date">Contract Start Date  </label>
-                                            <input type="date" class="form-control datepicker @error('contract_start_date') is-invalid @enderror" id="contract_start_date" name="contract_start_date" value="{{ old('contract_start_date') }}">
+                                            <label for="contract_start_date">Contract Start Date <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control flatpickr @error('contract_start_date') is-invalid @enderror" id="contract_start_date" name="contract_start_date" value="{{ old('contract_start_date') }}" placeholder="Select start date" required>
                                             @error('contract_start_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -134,8 +134,8 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="contract_end_date">Contract End Date </label>
-                                            <input type="date" class="form-control @error('contract_end_date') is-invalid @enderror" id="contract_end_date" name="contract_end_date" value="{{ old('contract_end_date') }}">
+                                            <label for="contract_end_date">Contract End Date <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control flatpickr @error('contract_end_date') is-invalid @enderror" id="contract_end_date" name="contract_end_date" value="{{ old('contract_end_date') }}" placeholder="Select end date" required>
                                             @error('contract_end_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -169,5 +169,31 @@
     </script>
 
 
-@endsection
 
+
+<script>
+    // Initialize Flatpickr on date fields
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize start date picker
+        const startDatePicker = flatpickr('#contract_start_date', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'F j, Y',
+            onChange: function(selectedDates, dateStr, instance) {
+                // Update end date min date when start date changes
+                if (selectedDates[0]) {
+                    endDatePicker.set('minDate', selectedDates[0]);
+                }
+            }
+        });
+        
+        // Initialize end date picker
+        const endDatePicker = flatpickr('#contract_end_date', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'F j, Y',
+            minDate: document.getElementById('contract_start_date').value || 'today'
+        });
+    });
+</script>
+@endsection

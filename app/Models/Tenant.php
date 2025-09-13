@@ -23,4 +23,9 @@ class Tenant extends Model
     {
         return $this->belongsTo(Apartment::class);
     }
+
+    public function histories()
+    {
+        return $this->hasMany(TenantHistory::class);
+    }
 }

@@ -94,60 +94,6 @@
                                             @enderror
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="apartment_id"> Apartment Number</label>
-                                            <select class="form-control @error('apartment_id') is-invalid @enderror" id="apartment_id" name="apartment_id">
-                                                <option value="">Select Apartment Number</option>
-                                                @foreach ($apartments as $apartment)
-                                                    <option value="{{ $apartment->id }}" {{ old('apartment_id', $tenant->apartment_id) == $apartment->id ? 'selected' : '' }}>
-                                                        {{ ucfirst(str_replace('-', ' ', $apartment->apartment_number)) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="bill_cycle">Rent Billing Cycle</label>
-                                            <select class="form-control @error('bill_cycle') is-invalid @enderror" id="bill_cycle" name="bill_cycle">
-                                                <option value="monthly" {{ old('bill_cycle', $tenant->bill_cycle) == 'monthly' ? 'selected' : '' }}>Monthly</option>
-                                                <option value="annually" {{ old('bill_cycle', $tenant->bill_cycle) == 'annually' ? 'selected' : '' }}>Annually</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="rent_amount">Rent Amount </label>
-                                            <input type="number" class="form-control @error('rent_amount') is-invalid @enderror" id="rent_amount" name="rent_amount" value="{{ old('rent_amount', $tenant->rent_amount) }}">
-                                            @error('rent_amount')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="contract_start_date">Contract Start Date  </label>
-                                            <input type="date" class="form-control datepicker @error('contract_start_date') is-invalid @enderror" id="contract_start_date" name="contract_start_date" value="{{ old('contract_start_date', $tenant->contract_start_date) }}">
-                                            @error('contract_start_date')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="contract_end_date">Contract End Date </label>
-                                            <input type="date" class="form-control @error('contract_end_date') is-invalid @enderror" id="contract_end_date" name="contract_end_date" value="{{ old('contract_end_date', $tenant->contract_end_date) }}">
-                                            @error('contract_end_date')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
                                     
                                 </div>
 
@@ -177,3 +123,36 @@
 
 
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    // Initialize Flatpickr on date fields
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize start date picker
+        const startDatePicker = flatpickr('#contract_start_date', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'F j, Y',
+            onChange: function(selectedDates, dateStr, instance) {
+                // Update end date min date when start date changes
+                if (selectedDates[0]) {
+                    endDatePicker.set('minDate', selectedDates[0]);
+                }
+            }
+        });
+        
+        // Initialize end date picker
+        const endDatePicker = flatpickr('#contract_end_date', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'F j, Y',
+            minDate: document.getElementById('contract_start_date').value || 'today'
+        });
+    });
+</script>
+@endpush
