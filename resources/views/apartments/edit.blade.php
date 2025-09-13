@@ -113,7 +113,7 @@
                                                 <option value="Unsold" {{ old('status', $apartment->status) == 'Unsold' ? 'selected' : '' }}>Unsold</option>
                                                 <option value="Occupied" {{ old('status', $apartment->status) == 'Occupied' ? 'selected' : '' }}>Occupied</option>
                                                 <option value="Rent" {{ old('status', $apartment->status) == 'Rent' ? 'selected' : '' }}>Avaiable For Rent</option>
-                                                <option value="Rent" {{ old('status', $apartment->status) == 'Rented' ? 'selected' : '' }}>Rented</option>
+                                                <option value="Rent" {{ old('status', $apartment->status) == 'Rented' ? 'selected' : '' }}>On Rent</option>
                                             </select>
                                             @error('status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
