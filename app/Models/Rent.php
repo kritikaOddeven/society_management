@@ -18,7 +18,7 @@ class Rent extends Model
         'status',
         'payment_date',
         'payment_image',
-        'notes'
+        
     ];
 
     protected $casts = [

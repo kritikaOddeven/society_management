@@ -46,7 +46,6 @@ class RentController extends Controller
             'status' => 'required|in:Paid,Unpaid,Partial',
             'payment_date' => 'nullable|date',
             'payment_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,pdf|max:2048',
-            'notes' => 'nullable|string'
         ]);
 
         // Get current year and month for the rent entry
