@@ -60,7 +60,7 @@
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                         <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editATypeModal{{ $type->id }}"><i class="fas fa-pencil-alt"></i></button>
-                                                        <form action="{{ route('types.destroy', $type->id) }}" method="POST" style="display: inline;">
+                                                        <form action="{{ route('settings.types.destroy', $type->id) }}" method="POST" style="display: inline;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete this aparment type?')">
