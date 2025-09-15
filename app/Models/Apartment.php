@@ -40,5 +40,9 @@ class Apartment extends Model
     {
         return $this->belongsTo(Owner::class);
     }
+    public function tenant()
+    {
+        return $this->hasOne(Tenant::class);
+    }
 
 }

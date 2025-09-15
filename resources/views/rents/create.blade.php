@@ -30,7 +30,7 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('rents.store') }}" method="POST">
+                            <form action="{{ route('rents.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6">
@@ -39,8 +39,8 @@
                                             <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
                                                 <option value="">Select Tower</option>
                                                 @foreach ($towers as $tower)
-                                                    <option value="{{ $tower->id }}" {{ old('tower_id') == $tower->id ? 'selected' : '' }}>
-                                                        {{ $tower->name }}
+                                                    <option value="{{ $tower->id }}">
+                                                        {{ $tower->tower_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -108,6 +108,30 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-md-6" id="payment_date_field" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="payment_date">Payment Date</label>
+                                            <input type="text" class="form-control flatpickr @error('payment_date') is-invalid @enderror" 
+                                                id="payment_date" name="payment_date" value="{{ old('payment_date') }}" 
+                                                placeholder="Select payment date">
+                                            @error('payment_date')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6" id="payment_image_field" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="payment_image">Payment Proof (Optional)</label>
+                                            <input type="file" class="form-control @error('payment_image') is-invalid @enderror" 
+                                                id="payment_image" name="payment_image" accept="image/*">
+                                            <small class="form-text text-muted">Upload payment receipt or proof (JPG, PNG, PDF)</small>
+                                            @error('payment_image')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             <div class="form-group d-flex justify-content-end">
@@ -122,13 +146,7 @@
         </div>
     </section>
     {{-- End main section --}}
-@endsection
 
-@push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-@endpush
-
-@push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
@@ -157,9 +175,11 @@
                 if (towerId) {
                     const tower = towers.find(t => t.id == towerId);
                     if (tower && tower.floors) {
+                        
                         tower.floors.forEach(floor => {
+                            console.log('floor', floor);
                             $('#floor_id').append(
-                                `<option value="${floor.id}">${floor.name}</option>`
+                                `<option value="${floor.id}">${floor.floor_name}</option>`
                             );
                         });
                     }
@@ -197,15 +217,42 @@
             // Handle apartment selection
             $('#apartment_id').on('change', function() {
                 const selectedOption = $(this).find(':selected');
-
-                if (selectedOption.val()) {
-                    $('#tenant_name').val(selectedOption.data('tenant-name') || '');
-                    $('#rent_amount').val(selectedOption.data('rent-amount') || '');
+                const tenantName = selectedOption.data('tenant-name');
+                const rentAmount = selectedOption.data('rent-amount');
+                
+                // Auto-populate tenant name and rent amount
+                if (tenantName) {
+                    $('#tenant_name').val(tenantName);
                 } else {
                     $('#tenant_name').val('');
-                    $('#rent_amount').val('');
+                    alert('No tenant found for this apartment');
+                }
+                
+                if (rentAmount) {
+                    $('#rent_amount').val(rentAmount);
                 }
             });
+
+            // Handle status change to show/hide payment fields
+            $('#status').on('change', function() {
+                const status = $(this).val();
+                if (status === 'Paid') {
+                    $('#payment_date_field').show();
+                    $('#payment_image_field').show();
+                } else {
+                    $('#payment_date_field').hide();
+                    $('#payment_image_field').hide();
+                    $('#payment_date').val('');
+                    $('#payment_image').val('');
+                }
+            });
+
+            // Check initial status on page load
+            if ($('#status').val() === 'Paid') {
+                $('#payment_date_field').show();
+                $('#payment_image_field').show();
+            }
         });
     </script>
-@endpush
+@endsection
+

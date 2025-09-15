@@ -17,6 +17,7 @@ class Rent extends Model
         'rent_amount',
         'status',
         'payment_date',
+        'payment_image',
         'notes'
     ];
 

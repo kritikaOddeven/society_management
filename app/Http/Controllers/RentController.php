@@ -26,7 +26,7 @@ class RentController extends Controller
     public function create()
     {
         $towers = Tower::with(['floors.apartments' => function ($q) {
-            $q->where('status', 'Rented'); // only rented apartments
+            $q->where('status', 'Rented')->with('tenant'); // only rented apartments with tenant data
         }])->get();
         
         $currentYear = date('Y');
@@ -45,6 +45,7 @@ class RentController extends Controller
             'rent_amount' => 'required|numeric|min:0',
             'status' => 'required|in:Paid,Unpaid,Partial',
             'payment_date' => 'nullable|date',
+            'payment_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,pdf|max:2048',
             'notes' => 'nullable|string'
         ]);
 
@@ -65,6 +66,12 @@ class RentController extends Controller
             return back()->with('error', 'Rent entry already exists for this apartment and period.');
         }
 
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('payment_image')) {
+            $imagePath = $request->file('payment_image')->store('payment_proofs', 'public');
+        }
+
         $rent = Rent::create([
             'tower_id' => $request->tower_id,
             'floor_id' => $request->floor_id,
@@ -76,6 +83,7 @@ class RentController extends Controller
             'rent_amount' => $request->rent_amount,
             'status' => $request->status,
             'payment_date' => $request->payment_date,
+            'payment_image' => $imagePath,
             'notes' => $request->notes
         ]);
 
@@ -86,7 +94,7 @@ class RentController extends Controller
     {
         $rent = Rent::findOrFail($id);
         $towers = Tower::with(['floors.apartments' => function ($q) {
-            $q->where('status', 'Rented');
+            $q->where('status', 'Rented')->with('tenant'); // Include tenant data
         }])->get();
         
         $years = Rent::getYears();
@@ -107,6 +115,7 @@ class RentController extends Controller
             'rent_amount' => 'required|numeric|min:0',
             'status' => 'required|in:Paid,Unpaid,Partial',
             'payment_date' => 'nullable|date',
+            'payment_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,pdf|max:2048',
             'notes' => 'nullable|string'
         ]);
 
@@ -129,6 +138,16 @@ class RentController extends Controller
             }
         }
 
+        // Handle image upload
+        $imagePath = $rent->payment_image;
+        if ($request->hasFile('payment_image')) {
+            // Delete old image if exists
+            if ($rent->payment_image && \Storage::disk('public')->exists($rent->payment_image)) {
+                \Storage::disk('public')->delete($rent->payment_image);
+            }
+            $imagePath = $request->file('payment_image')->store('payment_proofs', 'public');
+        }
+
         $rent->update([
             'tower_id' => $request->tower_id,
             'floor_id' => $request->floor_id,
@@ -140,6 +159,7 @@ class RentController extends Controller
             'rent_amount' => $request->rent_amount,
             'status' => $request->status,
             'payment_date' => $request->payment_date,
+            'payment_image' => $imagePath,
             'notes' => $request->notes
         ]);
 

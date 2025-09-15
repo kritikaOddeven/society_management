@@ -26,7 +26,7 @@ return new class extends Migration
             $table->decimal('rent_amount', 10, 2);
             $table->enum('status', ['Paid', 'Unpaid', 'Partial'])->default('Unpaid');
             $table->date('payment_date')->nullable();
-            $table->text('notes')->nullable();
+            $table->string('payment_image')->nullable();
             $table->timestamps();
             
             // Add unique constraint to prevent duplicate rent entries

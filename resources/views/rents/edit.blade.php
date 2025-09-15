@@ -30,7 +30,7 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('rents.update', $rent->id) }}" method="POST">
+                            <form action="{{ route('rents.update', $rent->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
@@ -42,7 +42,7 @@
                                                 @foreach ($towers as $tower)
                                                     <option value="{{ $tower->id }}" 
                                                         {{ old('tower_id', $rent->tower_id) == $tower->id ? 'selected' : '' }}>
-                                                        {{ $tower->name }}
+                                                        {{ $tower->tower_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -144,12 +144,12 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" id="payment_date_field" style="display: {{ old('status', $rent->status) == 'Paid' ? 'block' : 'none' }};">
                                         <div class="form-group">
                                             <label for="payment_date">Payment Date</label>
                                             <input type="text" class="form-control flatpickr @error('payment_date') is-invalid @enderror" 
                                                 id="payment_date" name="payment_date" 
-                                                value="{{ old('payment_date', $rent->payment_date ? $rent->payment_date->format('Y-m-d') : '') }}" 
+                                                value="{{ old('payment_date', $rent->payment_date) }}" 
                                                 placeholder="Select payment date">
                                             @error('payment_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -157,16 +157,23 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" id="payment_image_field" style="display: {{ old('status', $rent->status) == 'Paid' ? 'block' : 'none' }};">
                                         <div class="form-group">
-                                            <label for="notes">Notes</label>
-                                            <textarea class="form-control @error('notes') is-invalid @enderror" 
-                                                id="notes" name="notes" rows="3">{{ old('notes', $rent->notes) }}</textarea>
-                                            @error('notes')
+                                            <label for="payment_image">Payment Proof (Optional)</label>
+                                            <input type="file" class="form-control @error('payment_image') is-invalid @enderror" 
+                                                id="payment_image" name="payment_image" accept="image/*">
+                                            <small class="form-text text-muted">Upload payment receipt or proof (JPG, PNG, PDF)</small>
+                                            @if($rent->payment_image)
+                                                <div class="mt-2">
+                                                    <small class="text-success">Current file: {{ basename($rent->payment_image) }}</small>
+                                                </div>
+                                            @endif
+                                            @error('payment_image')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="form-group d-flex justify-content-end">
@@ -181,13 +188,7 @@
         </div>
     </section>
     {{-- End main section --}}
-@endsection
 
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-@endpush
-
-@push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
@@ -203,9 +204,47 @@
     const towers = @json($towers);
     const currentRent = @json($rent);
 
+    // Ensure the page is fully loaded
+    $(window).on('load', function() {
+        // Initialize with current values if tower is already selected
+        if (currentRent.tower_id) {
+            // Load floors for the selected tower
+            const tower = towers.find(t => t.id == currentRent.tower_id);
+            if (tower && tower.floors) {
+                const floorSelect = $('#floor_id');
+                floorSelect.empty().append('<option value="">Select Floor</option>');
+                
+                tower.floors.forEach(floor => {
+                    floorSelect.append(
+                        `<option value="${floor.id}">${floor.floor_name}</option>`
+                    );
+                });
+                
+                // Set the selected floor
+                floorSelect.val(currentRent.floor_id);
+                
+                // Load apartments for the selected floor
+                const floor = tower.floors.find(f => f.id == currentRent.floor_id);
+                if (floor && floor.apartments) {
+                    const apartmentSelect = $('#apartment_id');
+                    apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+                    
+                    floor.apartments.forEach(apartment => {
+                        apartmentSelect.append(`<option value="${apartment.id}" 
+                            data-tenant-name="${apartment.tenant ? apartment.tenant.name : ''}"
+                            data-rent-amount="${apartment.tenant ? apartment.tenant.rent_amount : ''}">
+                            ${apartment.apartment_number}
+                        </option>`);
+                    });
+                    
+                    // Set the selected apartment
+                    apartmentSelect.val(currentRent.apartment_id);
+                }
+            }
+        }
+    });
+
     $(document).ready(function() {
-        // Initialize with current values
-        loadFloors(currentRent.tower_id, currentRent.floor_id);
         
         // Handle tower selection
         $('#tower_id').on('change', function() {
@@ -229,7 +268,62 @@
                 $('#rent_amount').val(selectedOption.data('rent-amount') || $('#rent_amount').val());
             }
         });
+
+        // Handle status change to show/hide payment fields
+        $('#status').on('change', function() {
+            const status = $(this).val();
+            if (status === 'Paid') {
+                $('#payment_date_field').show();
+                $('#payment_image_field').show();
+            } else {
+                $('#payment_date_field').hide();
+                $('#payment_image_field').hide();
+                $('#payment_date').val('');
+                $('#payment_image').val('');
+            }
+        });
     });
+
+    function loadFloorsAndApartments(towerId, selectedFloorId, selectedApartmentId) {
+        const floorSelect = $('#floor_id');
+        const apartmentSelect = $('#apartment_id');
+        
+        // Reset dropdowns
+        floorSelect.empty().append('<option value="">Select Floor</option>');
+        apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+        
+        if (towerId) {
+            const tower = towers.find(t => t.id == towerId);
+            if (tower && tower.floors) {
+                // Load floors
+                tower.floors.forEach(floor => {
+                    // Use == for comparison to handle string/number type differences
+                    const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
+                    floorSelect.append(
+                        `<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`
+                    );
+                });
+                
+                // Load apartments for selected floor
+                if (selectedFloorId) {
+                    const floor = tower.floors.find(f => f.id == selectedFloorId);
+                    if (floor && floor.apartments) {
+                        floor.apartments.forEach(apartment => {
+                            // Use == for comparison to handle string/number type differences
+                            const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
+                            const option = `<option value="${apartment.id}" 
+                                data-tenant-name="${apartment.tenant ? apartment.tenant.name : ''}"
+                                data-rent-amount="${apartment.tenant ? apartment.tenant.rent_amount : ''}"
+                                ${selected}>
+                                ${apartment.apartment_number}
+                            </option>`;
+                            apartmentSelect.append(option);
+                        });
+                    }
+                }
+            }
+        }
+    }
 
     function loadFloors(towerId, selectedFloorId = null) {
         const floorSelect = $('#floor_id');
@@ -245,7 +339,7 @@
                 tower.floors.forEach(floor => {
                     const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
                     floorSelect.append(
-                        `<option value="${floor.id}" ${selected}>${floor.name}</option>`
+                        `<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`
                     );
                 });
                 
@@ -283,4 +377,4 @@
         }
     }
 </script>
-@endpush
+@endsection

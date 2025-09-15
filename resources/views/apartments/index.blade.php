@@ -54,7 +54,7 @@
                                             <th>Apartment Area</th>
                                             <th>Aparmtent Type</th>
                                             <th>Status</th>
-                                            <th>Towaer Name</th>
+                                            <th>Tower Name</th>
                                             <th>Floors</th>
                                             <th style="width: 200px">Action</th>
                                         </tr>
