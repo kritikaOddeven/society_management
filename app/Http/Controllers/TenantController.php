@@ -16,7 +16,8 @@ class TenantController extends Controller
 
     public function create()
     {
-        $apartments = Apartment::where('status', 'Rent')->get();
+        // $apartments = Apartment::where('status', 'Rent')->get();
+        $apartments = Apartment::whereIn('status', ['Rent', 'Unsold'])->get();
         return view('tenants.create', compact('apartments'));
     }
 
