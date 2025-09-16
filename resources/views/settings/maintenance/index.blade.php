@@ -113,46 +113,27 @@
                                 <div class="tab-pane fade" id="unit_type3" role="tabpanel" aria-labelledby="unit_type-tab3">
                                     <form action="{{ route('settings.maintenance.store') }}" method="POST">
                                         @csrf
-                                        <div class="card">
-                                            <div class="card-header" style="display: block;">
-                                                <h4>Unit Type Configuration</h4>
-                                                <p class="text-muted">Configure the unit-based maintenance calculation (e.g., per square foot)</p>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="unit_name">Unit Name<span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control @error('unit_name') is-invalid @enderror" 
-                                                                id="unit_name" name="unit_name" 
-                                                                value="{{ old('unit_name', $unitMaintenance->unit_name ?? '') }}" 
-                                                                placeholder="e.g., Square Foot, Square Meter" required>
-                                                            @error('unit_name')
-                                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="unit_value">Value Per Unit<span class="text-danger">*</span></label>
-                                                            <input type="number" step="0.01" class="form-control @error('unit_value') is-invalid @enderror" 
-                                                                id="unit_value" name="unit_value" 
-                                                                value="{{ old('unit_value', $unitMaintenance->unit_value ?? '') }}" 
-                                                                placeholder="0.00" required>
-                                                            @error('unit_value')
-                                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                            @enderror
-                                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="unit_name">Unit Name<span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control @error('unit_name') is-invalid @enderror" id="unit_name" name="unit_name" value="{{ old('unit_name') }}" required>
+                                                        @error('unit_name')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
                                                     </div>
                                                 </div>
-                                                @if($unitMaintenance)
-                                                <div class="alert alert-info">
-                                                    <strong>Current Configuration:</strong> {{ $unitMaintenance->unit_name }} @ {{ number_format($unitMaintenance->unit_value, 2) }} per unit
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="unit_value">Unit Value (<i class="fas fa-rupee-sign"></i>)<span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control @error('unit_value') is-invalid @enderror" id="unit_value" name="unit_value" value="{{ old('unit_value') }}" required>
+                                                        @error('unit_value')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
                                                 </div>
-                                                @endif
-                                            </div>
-                                            <div class="card-footer">
-                                                <button type="submit" class="btn btn-primary">Save Unit Configuration</button>
                                             </div>
                                         </div>
                                     </form>

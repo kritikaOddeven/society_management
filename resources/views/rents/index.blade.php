@@ -68,7 +68,7 @@
                                                 <td>{{ $rent->rent_month }} {{ $rent->rent_year }}</td>
                                                 <td>₹{{ number_format($rent->rent_amount, 2) }}</td>
                                                 <td>
-                                                    @if($rent->payment_date)
+                                                    @if ($rent->payment_date)
                                                         {{ \Carbon\Carbon::parse($rent->payment_date)->format('d/m/Y') }}
                                                     @else
                                                         <span class="text-muted">-</span>
@@ -85,6 +85,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
+                                                        @if ($rent->status !== 'Paid')
+                                                            <button class="btn btn-success btn-sm mr-2" data-toggle="modal" data-target="#payModal{{ $rent->id }}"><i class="fas fa-rupee-sign"></i></button>
+                                                        @endif
                                                         <a href="{{ route('rents.edit', $rent->id) }}" class="btn btn-primary btn-sm mr-2" data-toggle="tooltip" title="Edit">
                                                             <i class="fas fa-pencil-alt"></i>
                                                         </a>
@@ -110,4 +113,8 @@
         </div>
     </section>
     {{-- End main section --}}
+
+    @foreach ($rents as $key => $rent)
+        @include('rents.pay-modal', ['rent' => $rent])
+    @endforeach
 @endsection
