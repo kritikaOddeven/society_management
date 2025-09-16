@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ url('types/'.$type->id ) }}" data-role-id="{{$type->id}}" method="POST">
+            <form action="{{ url('settings/types/'.$type->id ) }}" data-role-id="{{$type->id}}" method="POST">
                 @method('PUT')  
                 @csrf
                 <div class="modal-body">

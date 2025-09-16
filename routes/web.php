@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\AmenitieController;
 use App\Http\Controllers\RentController;
+use App\Http\Controllers\MaintenanceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -67,8 +68,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('rents', TenantController::class);
     Route::resource('rents', RentController::class);
 
-    Route::resource('types', ApartmentTypeController::class);
-    // Route::prefix('settings')->as('settings.')->group(function () {
-    // });
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::resource('types', ApartmentTypeController::class);
+        Route::resource('maintenance', MaintenanceController::class);
+        
+    });
 
 });

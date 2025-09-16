@@ -13,7 +13,7 @@
                 <li><a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i> <span>Users Management</span></a></li>
             @endcan
 
-            <li><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
+            <li  class="{{ Request()->is('owners*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
 
             <li class="dropdown {{ Request()->is(['tenants*', 'rents*',]) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-th"></i></i> <span>Tenant</span></a>
@@ -57,11 +57,11 @@
                 </ul>
             </li>
 
-            <li class="dropdown">
+            <li class="dropdown  {{ Request()->is(['settings*', 'types*', 'maintenance*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('types.index') }}">Apartment Type</a></li>
-                    {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
+                    <li  class="{{ Request()->is('types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.types.index') }}">Apartment Type</a></li>
+                    <li class="{{ Request()->is('maintenance') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.maintenance.index') }}">Maintenance</a></li>
                 </ul>
             </li>
 
