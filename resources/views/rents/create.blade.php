@@ -100,8 +100,6 @@
                                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                                 <option value="Unpaid" {{ old('status') == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
                                                 <option value="Paid" {{ old('status') == 'Paid' ? 'selected' : '' }}>Paid</option>
-                                                <option value="Partial" {{ old('status') == 'Partial' ? 'selected' : '' }}>Partial</option>
-                                            </select>
                                             @error('status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

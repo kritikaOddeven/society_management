@@ -146,6 +146,44 @@ class RentController extends Controller
         return redirect()->route('rents.index')->with('success', 'Rent entry updated successfully.');
     }
 
+   public function payment(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:Paid,Unpaid,Partial',
+        'payment_date' => 'nullable|date',
+    ]);
+
+    $rent = Rent::findOrFail($id);
+
+    // Get tenant based on apartment
+    $tenant = Tenant::where('apartment_id', $request->apartment_id)->first();
+    
+    if (!$tenant) {
+        return back()->with('error', 'No tenant found for the selected apartment.');
+    }
+
+    // Check if updating to a different period that already exists
+    if ($rent->apartment_id != $request->apartment_id || 
+        $rent->rent_year != $request->rent_year || 
+        $rent->rent_month != $request->rent_month) {
+        
+        if (Rent::rentExists($request->apartment_id, $tenant->id, $request->rent_year, $request->rent_month)) {
+            return back()->with('error', 'Rent entry already exists for this apartment and period.');
+        }
+    }
+
+    // If payment_date is set, force status = Paid
+    $status = $request->payment_date ? 'Paid' : $request->status;
+
+    $rent->update([
+        'payment_date' => $request->payment_date,
+        'status'       => $status,
+    ]);
+
+    return redirect()->route('rents.index')->with('success', 'Rent entry updated successfully.');
+}
+
+    
     public function destroy($id)
     {
         $rent = Rent::findOrFail($id);

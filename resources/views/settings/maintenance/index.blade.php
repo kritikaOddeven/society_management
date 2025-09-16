@@ -114,7 +114,7 @@
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="unit_value">Unit Value<span class="text-danger">*</span></label>
+                                                        <label for="unit_value">Unit Value (<i class="fas fa-rupee-sign"></i>)<span class="text-danger">*</span></label>
                                                         <input type="text" class="form-control @error('unit_value') is-invalid @enderror" id="unit_value" name="unit_value" value="{{ old('unit_value') }}" required>
                                                         @error('unit_value')
                                                             <div class="invalid-feedback">{{ $message }}</div>

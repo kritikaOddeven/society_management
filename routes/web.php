@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::get('tenants-history', [TenantController::class, 'allHistory'])->name('tenants.all-history');
     Route::resource('rents', TenantController::class);
     Route::resource('rents', RentController::class);
+    Route::post('rents/payment', [RentController::class, 'payment'])->name('rents.payment');
 
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::resource('types', ApartmentTypeController::class);

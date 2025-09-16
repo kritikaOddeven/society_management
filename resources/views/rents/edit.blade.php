@@ -40,8 +40,7 @@
                                             <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
                                                 <option value="">Select Tower</option>
                                                 @foreach ($towers as $tower)
-                                                    <option value="{{ $tower->id }}" 
-                                                        {{ old('tower_id', $rent->tower_id) == $tower->id ? 'selected' : '' }}>
+                                                    <option value="{{ $tower->id }}" {{ old('tower_id', $rent->tower_id) == $tower->id ? 'selected' : '' }}>
                                                         {{ $tower->name }}
                                                     </option>
                                                 @endforeach
@@ -79,8 +78,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="tenant_name">Tenant Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('tenant_name') is-invalid @enderror" 
-                                                id="tenant_name" name="tenant_name" value="{{ old('tenant_name', $rent->tenant_name) }}" required readonly>
+                                            <input type="text" class="form-control @error('tenant_name') is-invalid @enderror" id="tenant_name" name="tenant_name" value="{{ old('tenant_name', $rent->tenant_name) }}" required readonly>
                                             @error('tenant_name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -122,8 +120,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="rent_amount">Rent Amount <span class="text-danger">*</span></label>
-                                            <input type="number" step="0.01" class="form-control @error('rent_amount') is-invalid @enderror" 
-                                                id="rent_amount" name="rent_amount" value="{{ old('rent_amount', $rent->rent_amount) }}" required>
+                                            <input type="number" step="0.01" class="form-control @error('rent_amount') is-invalid @enderror" id="rent_amount" name="rent_amount" value="{{ old('rent_amount', $rent->rent_amount) }}" required>
                                             @error('rent_amount')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -147,10 +144,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="payment_date">Payment Date</label>
-                                            <input type="text" class="form-control flatpickr @error('payment_date') is-invalid @enderror" 
-                                                id="payment_date" name="payment_date" 
-                                                value="{{ old('payment_date', $rent->payment_date ? $rent->payment_date->format('Y-m-d') : '') }}" 
-                                                placeholder="Select payment date">
+                                            <input type="date" class="form-control flatpickr @error('payment_date') is-invalid @enderror" id="payment_date" name="payment_date" value="{{ old('payment_date', $rent->payment_date ? $rent->payment_date->format('Y-m-d') : '') }}" placeholder="Select payment date">
                                             @error('payment_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -159,10 +153,12 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="notes">Notes</label>
-                                            <textarea class="form-control @error('notes') is-invalid @enderror" 
-                                                id="notes" name="notes" rows="3">{{ old('notes', $rent->notes) }}</textarea>
-                                            @error('notes')
+                                            <label for="payment_image">Upload Payment Prof</label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input @error('payment_image') is-invalid @enderror" id="payment_image" name="payment_image" accept="image/*">
+                                                <label class="custom-file-label" for="payment_image">Choose file</label>
+                                            </div>
+                                            @error('payment_image')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -184,103 +180,103 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
 
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    // Initialize Flatpickr for payment date
-    flatpickr('#payment_date', {
-        dateFormat: 'Y-m-d',
-        altInput: true,
-        altFormat: 'F j, Y',
-        maxDate: 'today'
-    });
-
-    // Tower data with floors and apartments
-    const towers = @json($towers);
-    const currentRent = @json($rent);
-
-    $(document).ready(function() {
-        // Initialize with current values
-        loadFloors(currentRent.tower_id, currentRent.floor_id);
-        
-        // Handle tower selection
-        $('#tower_id').on('change', function() {
-            const towerId = $(this).val();
-            loadFloors(towerId);
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize Flatpickr for payment date
+        flatpickr('#payment_date', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'F j, Y',
+            maxDate: 'today'
         });
 
-        // Handle floor selection
-        $('#floor_id').on('change', function() {
-            const towerId = $('#tower_id').val();
-            const floorId = $(this).val();
-            loadApartments(towerId, floorId);
+        // Tower data with floors and apartments
+        const towers = @json($towers);
+        const currentRent = @json($rent);
+
+        $(document).ready(function() {
+            // Initialize with current values
+            loadFloors(currentRent.tower_id, currentRent.floor_id);
+
+            // Handle tower selection
+            $('#tower_id').on('change', function() {
+                const towerId = $(this).val();
+                loadFloors(towerId);
+            });
+
+            // Handle floor selection
+            $('#floor_id').on('change', function() {
+                const towerId = $('#tower_id').val();
+                const floorId = $(this).val();
+                loadApartments(towerId, floorId);
+            });
+
+            // Handle apartment selection
+            $('#apartment_id').on('change', function() {
+                const selectedOption = $(this).find(':selected');
+
+                if (selectedOption.val()) {
+                    $('#tenant_name').val(selectedOption.data('tenant-name') || '');
+                    $('#rent_amount').val(selectedOption.data('rent-amount') || $('#rent_amount').val());
+                }
+            });
         });
 
-        // Handle apartment selection
-        $('#apartment_id').on('change', function() {
-            const selectedOption = $(this).find(':selected');
-            
-            if (selectedOption.val()) {
-                $('#tenant_name').val(selectedOption.data('tenant-name') || '');
-                $('#rent_amount').val(selectedOption.data('rent-amount') || $('#rent_amount').val());
-            }
-        });
-    });
+        function loadFloors(towerId, selectedFloorId = null) {
+            const floorSelect = $('#floor_id');
+            const apartmentSelect = $('#apartment_id');
 
-    function loadFloors(towerId, selectedFloorId = null) {
-        const floorSelect = $('#floor_id');
-        const apartmentSelect = $('#apartment_id');
-        
-        // Reset dropdowns
-        floorSelect.empty().append('<option value="">Select Floor</option>');
-        apartmentSelect.empty().append('<option value="">Select Apartment</option>');
-        
-        if (towerId) {
-            const tower = towers.find(t => t.id == towerId);
-            if (tower && tower.floors) {
-                tower.floors.forEach(floor => {
-                    const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
-                    floorSelect.append(
-                        `<option value="${floor.id}" ${selected}>${floor.name}</option>`
-                    );
-                });
-                
-                // If floor was selected, load apartments
-                if (selectedFloorId) {
-                    loadApartments(towerId, selectedFloorId, currentRent.apartment_id);
+            // Reset dropdowns
+            floorSelect.empty().append('<option value="">Select Floor</option>');
+            apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+
+            if (towerId) {
+                const tower = towers.find(t => t.id == towerId);
+                if (tower && tower.floors) {
+                    tower.floors.forEach(floor => {
+                        const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
+                        floorSelect.append(
+                            `<option value="${floor.id}" ${selected}>${floor.name}</option>`
+                        );
+                    });
+
+                    // If floor was selected, load apartments
+                    if (selectedFloorId) {
+                        loadApartments(towerId, selectedFloorId, currentRent.apartment_id);
+                    }
                 }
             }
         }
-    }
 
-    function loadApartments(towerId, floorId, selectedApartmentId = null) {
-        const apartmentSelect = $('#apartment_id');
-        
-        // Reset apartment dropdown
-        apartmentSelect.empty().append('<option value="">Select Apartment</option>');
-        
-        if (towerId && floorId) {
-            const tower = towers.find(t => t.id == towerId);
-            if (tower && tower.floors) {
-                const floor = tower.floors.find(f => f.id == floorId);
-                if (floor && floor.apartments) {
-                    floor.apartments.forEach(apartment => {
-                        const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
-                        const option = `<option value="${apartment.id}" 
+        function loadApartments(towerId, floorId, selectedApartmentId = null) {
+            const apartmentSelect = $('#apartment_id');
+
+            // Reset apartment dropdown
+            apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+
+            if (towerId && floorId) {
+                const tower = towers.find(t => t.id == towerId);
+                if (tower && tower.floors) {
+                    const floor = tower.floors.find(f => f.id == floorId);
+                    if (floor && floor.apartments) {
+                        floor.apartments.forEach(apartment => {
+                            const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
+                            const option = `<option value="${apartment.id}" 
                             data-tenant-name="${apartment.tenant ? apartment.tenant.name : ''}"
                             data-rent-amount="${apartment.tenant ? apartment.tenant.rent_amount : ''}"
                             ${selected}>
                             ${apartment.apartment_number}
                         </option>`;
-                        apartmentSelect.append(option);
-                    });
+                            apartmentSelect.append(option);
+                        });
+                    }
                 }
             }
         }
-    }
-</script>
+    </script>
 @endpush
