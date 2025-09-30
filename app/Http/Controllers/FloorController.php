@@ -16,29 +16,78 @@ class FloorController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'tower_id'   => 'required|exists:towers,id',
-            'floor_name' => 'required',
+            'floor_name' => 'required|string|min:1|max:50',
+        ], [
+            'tower_id.required' => 'Tower selection is required',
+            'tower_id.exists' => 'Selected tower is invalid',
+            'floor_name.required' => 'Floor name is required',
+            'floor_name.min' => 'Floor name must be at least 1 character',
+            'floor_name.max' => 'Floor name must not exceed 50 characters',
         ]);
 
-        Floor::create($request->all());
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $floor = Floor::create($request->all());
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Floor created successfully.',
+                'floor' => $floor->load('tower')
+            ]);
+        }
 
         return redirect()->route('floors.index')->with('success', 'Floor created successfully.');
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'floor_name' => 'required',
-            'tower_id' => 'required',
+        $floor = Floor::findOrFail($id);
+        
+        $validator = \Validator::make($request->all(), [
+            'tower_id'   => 'required|exists:towers,id',
+            'floor_name' => 'required|string|min:1|max:50',
+        ], [
+            'tower_id.required' => 'Tower selection is required',
+            'tower_id.exists' => 'Selected tower is invalid',
+            'floor_name.required' => 'Floor name is required',
+            'floor_name.min' => 'Floor name must be at least 1 character',
+            'floor_name.max' => 'Floor name must not exceed 50 characters',
         ]);
 
-        $floor = Floor::find($id);
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $floor->floor_name = $request->floor_name;
         $floor->tower_id = $request->tower_id;
         $floor->save();
 
-        return redirect()->route('floors.index')->with('success', 'Tower updated successfully.');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Floor updated successfully.',
+                'floor' => $floor->load('tower')
+            ]);
+        }
+
+        return redirect()->route('floors.index')->with('success', 'Floor updated successfully.');
     }
 
     public function destroy(Floor $floor)

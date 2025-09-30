@@ -21,27 +21,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('success') }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('error') }}
-                                    </div>
-                                </div>
-                            @endif
+                            <x-alert/>
 
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-1">
@@ -99,4 +79,112 @@
     @foreach ($parkings as $key => $p)
         @include('apartments.parking.edit', ['parking' => $p])
     @endforeach
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // ✅ ADD PARKING AJAX SUBMISSION
+        $('#addParkingForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: "{{ route('parkings.store') }}",
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(res) {
+                    $form[0].reset();
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#addParkingModal').modal('hide');
+
+                    showSuccessAlert(res.message || 'Parking added successfully!', () => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save');
+                }
+            });
+        });
+
+        // ✅ EDIT PARKING AJAX SUBMISSION
+        $('.editParkingForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let parkingId = $form.data('parking-id');
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: '/parkings/' + parkingId,
+                type: 'POST',
+                data: $form.serialize() + '&_method=PUT',
+                success: function(res) {
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#editParkingModal' + parkingId).modal('hide');
+
+                    showSuccessAlert(res.message || 'Parking updated successfully!', () => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save');
+                }
+            });
+        });
+
+        // Real-time validation
+        $('#addParkingForm input[name="parking_code"], .editParkingForm input[name="parking_code"]').on('blur', function() {
+            let $errorSpan = $(this).siblings('.parking_code-error');
+            if($(this).val().trim() === '') {
+                $errorSpan.text('Parking code is required');
+            } else if($(this).val().length > 20) {
+                $errorSpan.text('Parking code must not exceed 20 characters');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        $('#addParkingForm select[name="floor_id"], .editParkingForm select[name="floor_id"]').on('change', function() {
+            let $errorSpan = $(this).siblings('.floor_id-error');
+            if($(this).val() === '') {
+                $errorSpan.text('Floor selection is required');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        // Clear errors on input
+        $('#addParkingForm input[name="parking_code"], .editParkingForm input[name="parking_code"]').on('input', function() {
+            if($(this).val().trim() !== '') {
+                $(this).siblings('.parking_code-error').text('');
+            }
+        });
+    });
+</script>
 @endsection

@@ -21,27 +21,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('success') }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('error') }}
-                                    </div>
-                                </div>
-                            @endif
+                            <x-alert/>
 
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-1">
@@ -90,4 +70,112 @@
      @foreach ($floors as $key => $floor)
         @include('apartments.floor.edit', ['floor' => $floor])
     @endforeach
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // ✅ ADD FLOOR AJAX SUBMISSION
+        $('#addFloorForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: "{{ route('floors.store') }}",
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(res) {
+                    $form[0].reset();
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#addFloorModal').modal('hide');
+
+                    showSuccessAlert(res.message || 'Floor added successfully!', () => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save');
+                }
+            });
+        });
+
+        // ✅ EDIT FLOOR AJAX SUBMISSION
+        $('.editFloorForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let floorId = $form.data('floor-id');
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: '/floors/' + floorId,
+                type: 'POST',
+                data: $form.serialize() + '&_method=PUT',
+                success: function(res) {
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#editFLoorModal' + floorId).modal('hide');
+
+                    showSuccessAlert(res.message || 'Floor updated successfully!', () => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save changes');
+                }
+            });
+        });
+
+        // Real-time validation
+        $('#addFloorForm select[name="tower_id"], .editFloorForm select[name="tower_id"]').on('change', function() {
+            let $errorSpan = $(this).siblings('.tower_id-error');
+            if($(this).val() === '') {
+                $errorSpan.text('Tower selection is required');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        $('#addFloorForm input[name="floor_name"], .editFloorForm input[name="floor_name"]').on('blur', function() {
+            let $errorSpan = $(this).siblings('.floor_name-error');
+            if($(this).val().trim() === '') {
+                $errorSpan.text('Floor name is required');
+            } else if($(this).val().length > 50) {
+                $errorSpan.text('Floor name must not exceed 50 characters');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        // Clear errors on input
+        $('#addFloorForm input[name="floor_name"], .editFloorForm input[name="floor_name"]').on('input', function() {
+            if($(this).val().trim() !== '') {
+                $(this).siblings('.floor_name-error').text('');
+            }
+        });
+    });
+</script>
 @endsection

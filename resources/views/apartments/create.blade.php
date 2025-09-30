@@ -19,7 +19,7 @@
                             <h4>Add Apartment</h4>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('apartments.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('apartments.store') }}" method="POST" enctype="multipart/form-data" id="addApartmentForm">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6">
@@ -36,6 +36,7 @@
                                             @error('tower_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger tower_id-error"></span>
                                         </div>
                                     </div>
 
@@ -48,6 +49,7 @@
                                             @error('floor_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger floor_id-error"></span>
                                         </div>
                                     </div>
 
@@ -58,6 +60,7 @@
                                             @error('apartment_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger apartment_number-error"></span>
                                         </div>
                                     </div>
 
@@ -82,6 +85,7 @@
                                             @error('parking_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger parking_id-error"></span>
                                         </div>
                                     </div>
                                     
@@ -94,6 +98,7 @@
                                             @error('apartment_area')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger apartment_area-error"></span>
                                         </div>
                                     </div>
 
@@ -112,6 +117,7 @@
                                             @error('apartment_type')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger apartment_type-error"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -126,23 +132,25 @@
                                             @error('status')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger status-error"></span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6" id="owner_div" style="display: none;">
                                         <div class="form-group">
                                             <label for="owner_name">Select Owner <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('owner_name') is-invalid @enderror" id="owner_name" name="owner_name" required>
+                                            <select class="form-control @error('owner_id') is-invalid @enderror" id="owner_id" name="owner_id" required>
                                                 <option value=""> Select Owner</option>
                                                 @foreach ($owners as $owner)
-                                                    <option value="{{ $owner->id }}" {{ old('id') == $owner->id ? 'selected' : '' }}>
+                                                    <option value="{{ $owner->id }}" {{ old('owner_id') == $owner->id ? 'selected' : '' }}>
                                                         {{ ucfirst(str_replace('-', ' ', $owner->name)) }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('owner_name')
+                                            @error('owner_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <span class="text-danger owner_id-error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -164,17 +172,56 @@
     @include('apartments.parking.create', ['apartments' => $apartments])
 @endsection
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section('scripts')
 <script>
     $(document).ready(function() {
+        // ✅ ADD APARTMENT AJAX SUBMISSION
+        $('#addApartmentForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: "{{ route('apartments.store') }}",
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(res) {
+                    $form[0].reset();
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#owner_div').hide(); // Hide owner div on reset
+                    $('#floor_id').empty().append('<option value="">Select Floor</option>'); // Reset floors
+
+                    showSuccessAlert(res.message || 'Apartment created successfully!', () => {
+                        window.location.href = res.redirect || "{{ route('apartments.index') }}";
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save');
+                }
+            });
+        });
+
+        // Owner field visibility toggle
         function toggleOwnerDiv() {
             let status = $('#apartment_status').val();
             if (status === 'Occupied' || status === 'Rent') {
                 $('#owner_div').show();
-                $('#owner_name').attr('required', true); // make owner required
+                $('#owner_id').attr('required', true);
             } else {
                 $('#owner_div').hide();
-                $('#owner_name').attr('required', false); // remove required
+                $('#owner_id').attr('required', false);
             }
         }
 
@@ -185,25 +232,23 @@
         $('#apartment_status').on('change', function() {
             toggleOwnerDiv();
         });
-    });
 
+        // Tower and Floor population
+        let towers = @json($towers);
 
-    let towers = @json($towers);
+        function populateFloors(towerId) {
+            $('#floor_id').empty().append('<option value="">Select Floor</option>');
 
-    function populateFloors(towerId) {
-        $('#floor_id').empty().append('<option value="">Select Floor</option>');
+            if (!towerId) return;
 
-        if (!towerId) return;
-
-        let tower = towers.find(t => t.id == towerId);
-        if (tower && tower.floors) {
-            tower.floors.forEach(floor => {
-                $('#floor_id').append('<option value="' + floor.id + '">' + floor.floor_name + '</option>');
-            });
+            let tower = towers.find(t => t.id == towerId);
+            if (tower && tower.floors) {
+                tower.floors.forEach(floor => {
+                    $('#floor_id').append('<option value="' + floor.id + '">' + floor.floor_name + '</option>');
+                });
+            }
         }
-    }
 
-    $(document).ready(function() {
         // On change of tower dropdown
         $('#tower_id').on('change', function() {
             populateFloors($(this).val());
@@ -217,5 +262,72 @@
             populateFloors(oldTower);
             $('#floor_id').val(oldFloor);
         }
+
+        // Real-time validation
+        $('#addApartmentForm input[name="apartment_number"]').on('blur', function() {
+            let $errorSpan = $(this).siblings('.apartment_number-error');
+            if($(this).val().trim() === '') {
+                $errorSpan.text('Apartment number is required');
+            } else if($(this).val().length > 50) {
+                $errorSpan.text('Apartment number must not exceed 50 characters');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        $('#addApartmentForm input[name="apartment_area"]').on('blur', function() {
+            let $errorSpan = $(this).siblings('.apartment_area-error');
+            let value = parseFloat($(this).val());
+            if($(this).val().trim() === '') {
+                $errorSpan.text('Apartment area is required');
+            } else if(isNaN(value) || value < 1) {
+                $errorSpan.text('Apartment area must be at least 1 sq ft');
+            } else if(value > 10000) {
+                $errorSpan.text('Apartment area must not exceed 10,000 sq ft');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        $('#addApartmentForm select[name="tower_id"]').on('change', function() {
+            let $errorSpan = $(this).siblings('.tower_id-error');
+            if($(this).val() === '') {
+                $errorSpan.text('Tower selection is required');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        $('#addApartmentForm select[name="floor_id"]').on('change', function() {
+            let $errorSpan = $(this).siblings('.floor_id-error');
+            if($(this).val() === '') {
+                $errorSpan.text('Floor selection is required');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        $('#addApartmentForm select[name="apartment_type"]').on('change', function() {
+            let $errorSpan = $(this).siblings('.apartment_type-error');
+            if($(this).val() === '') {
+                $errorSpan.text('Apartment type selection is required');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        // Clear errors on input
+        $('#addApartmentForm input').on('input', function() {
+            if($(this).val().trim() !== '') {
+                $(this).siblings('.text-danger').not('.req-star').text('');
+            }
+        });
+
+        $('#addApartmentForm select').on('change', function() {
+            if($(this).val() !== '') {
+                $(this).siblings('.text-danger').not('.req-star').text('');
+            }
+        });
     });
 </script>
+@endsection

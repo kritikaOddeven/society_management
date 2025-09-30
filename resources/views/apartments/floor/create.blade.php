@@ -7,15 +7,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('floors.store') }}" method="POST">
+            <form action="{{ route('floors.store') }}" method="POST" id="addFloorForm">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="tower_id">Tower Name <span class="text-danger">*</span></label>
-                                <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
+                                <label for="tower_id">Tower Name <span class="text-danger req-star">*</span></label>
+                                <select class="form-control" id="tower_id" name="tower_id">
                                     <option value="">Select Tower</option>
                                     @foreach ($towers as $tower)
                                         <option value="{{ $tower->id }}" {{ old('tower_id') == $tower->id ? 'selected' : '' }}>
@@ -23,19 +23,15 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('tower_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <span class="text-danger tower_id-error"></span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="floor">Floor <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('floor_name') is-invalid @enderror" id="floor_name" name="floor_name" value="{{ old('floor_name') }}" required>
-                                @error('floor_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <label for="floor">Floor <span class="text-danger req-star">*</span></label>
+                                <input type="text" class="form-control" id="floor_name" name="floor_name" value="{{ old('floor_name') }}">
+                                <span class="text-danger floor_name-error"></span>
                             </div>
                         </div>
 
