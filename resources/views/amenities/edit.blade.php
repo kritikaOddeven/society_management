@@ -26,20 +26,30 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="open_time">Open Time <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control @error('open_time') is-invalid @enderror" id="open_time" name="open_time" value="{{ $amenity->open_time }}" required>
-                                @error('open_time')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="input-group">
+                                    <input type="text" class="form-control timepicker-edit @error('open_time') is-invalid @enderror" id="open_time_{{ $amenity->id }}" name="open_time" value="{{ $amenity->open_time }}" placeholder="Select open time" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    </div>
+                                    @error('open_time')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 
                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="close_time">Close Time <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control @error('close_time') is-invalid @enderror" id="close_time" name="close_time" value="{{ $amenity->close_time }}" required>
-                                @error('close_time')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="input-group">
+                                    <input type="text" class="form-control timepicker-edit @error('close_time') is-invalid @enderror" id="close_time_{{ $amenity->id }}" name="close_time" value="{{ $amenity->close_time }}" placeholder="Select close time" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    </div>
+                                    @error('close_time')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 

@@ -1,6 +1,16 @@
 @extends('layouts.app')
 @section('pagetitle', 'Amentites')
 @section('main-content')
+    <style>
+        .bootstrap-timepicker-widget table td input {
+            width: 54px !important;
+        }
+
+        .bootstrap-timepicker-widget a.btn,
+        .bootstrap-timepicker-widget input {
+            border: none !important;
+        }
+    </style>
     {{-- Main section --}}
     <section class="section">
         <div class="section-header">
@@ -13,6 +23,8 @@
         <div class="section-body">
             <div class="row">
                 <div class="col-12">
+
+                <x-alert/>
                     <div class="card">
                         <div class="card-header d-md-flex justify-content-between">
                             <h4>Amenity Lists</h4>
@@ -21,27 +33,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('success') }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('error') }}
-                                    </div>
-                                </div>
-                            @endif
+                            
 
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-1">
@@ -60,7 +52,7 @@
                                             <tr>
                                                 <td>{{ ++$key }}</td>
                                                 <td>{{ $amenity->amenity_name }}</td>
-                                                <td>{{ ($amenity->open_time) }}</td>
+                                                <td>{{ $amenity->open_time }}</td>
                                                 <td>{{ $amenity->close_time }}</td>
                                                 <td>
                                                     @if ($amenity->status === 'active')
@@ -100,4 +92,101 @@
     @foreach ($amenities as $key => $amenity)
         @include('amenities.edit', ['amenity' => $amenity])
     @endforeach
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Flatpickr for Add Modal
+            function initializeTimePickers() {
+                flatpickr(".timepicker", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    allowInput: true,
+                    clickOpens: true,
+                    altInput: true,
+                    altFormat: "h:i K"
+                });
+
+                flatpickr(".timepicker-edit", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    allowInput: true,
+                    clickOpens: true,
+                    altInput: true,
+                    altFormat: "h:i K"
+                });
+            }
+
+            // Initialize on page load
+            initializeTimePickers();
+
+            // Re-initialize when modal is shown (for dynamic content)
+            $('#addAmenitieModal').on('shown.bs.modal', function() {
+                flatpickr("#addAmenitieModal .timepicker", {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    allowInput: true,
+                    clickOpens: true,
+                    altInput: true,
+                    altFormat: "h:i K"
+                });
+            });
+
+            // Initialize for edit modals
+            $('[id^=editAmenityModal]').on('shown.bs.modal', function() {
+                var modalId = $(this).attr('id');
+                flatpickr('#' + modalId + ' .timepicker-edit', {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    allowInput: true,
+                    clickOpens: true,
+                    altInput: true,
+                    altFormat: "h:i K"
+                });
+            });
+
+            // Make clicking on clock icon open the time picker
+            $(document).on('click', '.input-group-append .fa-clock', function() {
+                var input = $(this).closest('.input-group').find('input')[0];
+                if (input._flatpickr) {
+                    input._flatpickr.open();
+                }
+            });
+        });
+    </script>
+    <style>
+        .flatpickr-input {
+            background-color: white !important;
+            cursor: pointer;
+        }
+
+        .flatpickr-input[readonly] {
+            background-color: white !important;
+            opacity: 1;
+        }
+
+        .input-group-append {
+            cursor: pointer;
+        }
+
+        .flatpickr-time input:hover,
+        .flatpickr-time .flatpickr-am-pm:hover,
+        .flatpickr-time input:focus,
+        .flatpickr-time .flatpickr-am-pm:focus {
+            background: #f0f0f0;
+        }
+
+        .flatpickr-calendar {
+            z-index: 9999 !important;
+        }
+    </style>
 @endsection
