@@ -53,7 +53,7 @@
             <li class="dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Report</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="">Maintenance Report</a></li>
+                    <li><a class="nav-link" href="{{ url('reports') }}">Maintenance Report</a></li>
                 </ul>
             </li>
 

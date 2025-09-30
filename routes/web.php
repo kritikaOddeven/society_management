@@ -69,6 +69,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('rents', RentController::class);
     Route::post('rents/payment', [RentController::class, 'payment'])->name('rents.payment');
 
+   
+    Route::get('/reports', function () {
+        return view('reports.maintenance');
+    });
+
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::resource('types', ApartmentTypeController::class);
         Route::resource('maintenance', MaintenanceController::class);
