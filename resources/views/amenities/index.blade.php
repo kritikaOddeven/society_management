@@ -179,13 +179,9 @@
                         $form.find('.text-danger').not('.req-star').text('');
                         $('#addAmenitieModal').modal('hide');
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Added!',
-                            text: res.message || 'Amenity added successfully!',
-                            timer: 3000,
-                            confirmButtonText: 'OK',
-                        }).then(() => location.reload());
+                        showSuccessAlert(res.message || 'Amenity added successfully!', () => {
+                            location.reload();
+                        });
                     },
                     error: function(xhr) {
                         if(xhr.status === 422) {
@@ -196,11 +192,7 @@
                                 $form.find('.' + field + '-error').text(messages[0]);
                             });
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Something went wrong. Please try again.',
-                            });
+                            showErrorAlert('Something went wrong. Please try again.');
                         }
                         $submitBtn.prop('disabled', false).text('Save');
                     }
@@ -224,13 +216,9 @@
                         $form.find('.text-danger').not('.req-star').text('');
                         $('#editAmenityModal' + amenityId).modal('hide');
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Updated!',
-                            text: res.message || 'Amenity updated successfully!',
-                            timer: 3000,
-                            confirmButtonText: 'OK',
-                        }).then(() => location.reload());
+                        showSuccessAlert(res.message || 'Amenity updated successfully!', () => {
+                            location.reload();
+                        });
                     },
                     error: function(xhr) {
                         if(xhr.status === 422) {
@@ -241,11 +229,7 @@
                                 $form.find('.' + field + '-error').text(messages[0]);
                             });
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Something went wrong. Please try again.',
-                            });
+                            showErrorAlert('Something went wrong. Please try again.');
                         }
                         $submitBtn.prop('disabled', false).text('Save changes');
                     }

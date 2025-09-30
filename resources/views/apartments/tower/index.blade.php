@@ -21,27 +21,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('success') }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="alert alert-danger alert-dismissible show fade">
-                                    <div class="alert-body">
-                                        <button class="close" data-dismiss="alert">
-                                            <span>&times;</span>
-                                        </button>
-                                        {{ session('error') }}
-                                    </div>
-                                </div>
-                            @endif
+                            <x-alert/>
 
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-1">
@@ -93,4 +73,105 @@
         @include('apartments.tower.edit', ['tower' => $t])
     @endforeach
 
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // ✅ ADD TOWER AJAX SUBMISSION
+        $('#addTowerForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: "{{ route('towers.store') }}",
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(res) {
+                    $form[0].reset();
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#addTowerModal').modal('hide');
+
+                    showSuccessAlert(res.message || 'Tower added successfully!', () => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save');
+                }
+            });
+        });
+
+        // ✅ EDIT TOWER AJAX SUBMISSION
+        $('.editTowerForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let $form = $(this);
+            let towerId = $form.data('tower-id');
+            let $submitBtn = $form.find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: '/towers/' + towerId,
+                type: 'POST',
+                data: $form.serialize() + '&_method=PUT',
+                success: function(res) {
+                    $form.find('.text-danger').not('.req-star').text('');
+                    $('#editTowerModal' + towerId).modal('hide');
+
+                    showSuccessAlert(res.message || 'Tower updated successfully!', () => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if(xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $form.find('.text-danger').not('.req-star').text('');
+                        
+                        $.each(errors, function(field, messages) {
+                            $form.find('.' + field + '-error').text(messages[0]);
+                        });
+                    } else {
+                        showErrorAlert('Something went wrong. Please try again.');
+                    }
+                    $submitBtn.prop('disabled', false).text('Save changes');
+                }
+            });
+        });
+
+        // Real-time validation for required fields
+        $('#addTowerForm input[name="tower_name"], .editTowerForm input[name="tower_name"]').on('blur', function() {
+            let $errorSpan = $(this).siblings('.tower_name-error');
+            if($(this).val().trim() === '') {
+                $errorSpan.text('Tower name is required');
+            } else if($(this).val().length < 2) {
+                $errorSpan.text('Tower name must be at least 2 characters');
+            } else if($(this).val().length > 100) {
+                $errorSpan.text('Tower name must not exceed 100 characters');
+            } else {
+                $errorSpan.text('');
+            }
+        });
+
+        // Clear errors on input
+        $('#addTowerForm input[name="tower_name"], .editTowerForm input[name="tower_name"]').on('input', function() {
+            if($(this).val().trim() !== '') {
+                $(this).siblings('.tower_name-error').text('');
+            }
+        });
+    });
+</script>
 @endsection

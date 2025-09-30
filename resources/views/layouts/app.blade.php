@@ -161,6 +161,112 @@
 
 
 
+    <!-- Common SweetAlert Functions -->
+    <script>
+    // Common SweetAlert success function
+    function showSuccessAlert(message, callback = null, timer = 3000) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: message,
+            timer: timer,
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#28a745'
+        }).then((result) => {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+
+    // Common SweetAlert error function
+    function showErrorAlert(message, callback = null) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: message,
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#dc3545'
+        }).then((result) => {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+
+    // Common SweetAlert warning function
+    function showWarningAlert(message, callback = null) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Warning!',
+            text: message,
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#ffc107'
+        }).then((result) => {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+
+    // Common SweetAlert info function
+    function showInfoAlert(message, callback = null) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: message,
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#17a2b8'
+        }).then((result) => {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        });
+    }
+
+    // Common SweetAlert confirmation function
+    function showConfirmAlert(title, text, confirmCallback, cancelCallback = null) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, proceed!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed && confirmCallback && typeof confirmCallback === 'function') {
+                confirmCallback();
+            } else if (result.isDismissed && cancelCallback && typeof cancelCallback === 'function') {
+                cancelCallback();
+            }
+        });
+    }
+
+    // Loading alert function
+    function showLoadingAlert(message = 'Processing...') {
+        Swal.fire({
+            title: message,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
+
+    // Close any open SweetAlert
+    function closeSweetAlert() {
+        Swal.close();
+    }
+    </script>
+
     @yield('scripts')
 </body>
 

@@ -7,17 +7,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('towers.store') }}" method="POST">
+            <form action="{{ route('towers.store') }}" method="POST" id="addTowerForm">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="tower_name">Tower Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('tower_name') is-invalid @enderror" id="tower_name" name="tower_name" value="{{ old('tower_name') }}" required>
-                                @error('tower_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <label for="tower_name">Tower Name <span class="text-danger req-star">*</span></label>
+                                <input type="text" class="form-control" id="tower_name" name="tower_name" value="{{ old('tower_name') }}">
+                                <span class="text-danger tower_name-error"></span>
                             </div>
                         </div>
                     </div>
