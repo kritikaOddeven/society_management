@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     {{-- <title>General Dashboard &mdash; Stisla</title> --}}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/logo/logo-transparent.png') }}">
     <title>@yield('pagetitle')</title>
 
     <!-- General CSS Files -->
@@ -25,6 +26,11 @@
     <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
+
+    <!-- datatable CSS Libraries -->
+  <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css')}}">
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -130,6 +136,15 @@
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('assets/js/page/index-0.js') }}"></script>
+
+     <!--datatble JS Libraies -->
+  <script src="{{ asset('assets/modules/datatables/datatables.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js')}}"></script>
+  <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js')}}"></script>
+
+  <!-- Page Specific JS File -->
+  <script src="{{ asset('assets/js/page/modules-datatables.js')}}"></script>
 
     <!-- Template JS File -->
     <script src="{{ asset('assets/js/scripts.js') }}"></script>

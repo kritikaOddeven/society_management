@@ -61,6 +61,7 @@
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
                 <ul class="dropdown-menu">
                     <li  class="{{ Request()->is('types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.types.index') }}">Apartment Type</a></li>
+                    <li  class="{{ Request()->is('service_types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.service_types.index') }}">Service Type</a></li>
                     <li class="{{ Request()->is('maintenance') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.maintenance.index') }}">Maintenance</a></li>
                 </ul>
             </li>
