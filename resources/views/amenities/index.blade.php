@@ -161,6 +161,120 @@
                     input._flatpickr.open();
                 }
             });
+
+            // ✅ ADD AMENITY AJAX SUBMISSION
+            $('#addAmenityForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let $form = $(this);
+                let $submitBtn = $form.find('button[type="submit"]');
+                $submitBtn.prop('disabled', true).text('Saving...');
+
+                $.ajax({
+                    url: "{{ route('amenities.store') }}",
+                    type: 'POST',
+                    data: $form.serialize(),
+                    success: function(res) {
+                        $form[0].reset();
+                        $form.find('.text-danger').not('.req-star').text('');
+                        $('#addAmenitieModal').modal('hide');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Added!',
+                            text: res.message || 'Amenity added successfully!',
+                            timer: 3000,
+                            confirmButtonText: 'OK',
+                        }).then(() => location.reload());
+                    },
+                    error: function(xhr) {
+                        if(xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $form.find('.text-danger').not('.req-star').text('');
+                            
+                            $.each(errors, function(field, messages) {
+                                $form.find('.' + field + '-error').text(messages[0]);
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        }
+                        $submitBtn.prop('disabled', false).text('Save');
+                    }
+                });
+            });
+
+            // ✅ EDIT AMENITY AJAX SUBMISSION
+            $('.editAmenityForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let $form = $(this);
+                let amenityId = $form.data('amenity-id');
+                let $submitBtn = $form.find('button[type="submit"]');
+                $submitBtn.prop('disabled', true).text('Saving...');
+
+                $.ajax({
+                    url: '/amenities/' + amenityId,
+                    type: 'POST',
+                    data: $form.serialize() + '&_method=PUT',
+                    success: function(res) {
+                        $form.find('.text-danger').not('.req-star').text('');
+                        $('#editAmenityModal' + amenityId).modal('hide');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Updated!',
+                            text: res.message || 'Amenity updated successfully!',
+                            timer: 3000,
+                            confirmButtonText: 'OK',
+                        }).then(() => location.reload());
+                    },
+                    error: function(xhr) {
+                        if(xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $form.find('.text-danger').not('.req-star').text('');
+                            
+                            $.each(errors, function(field, messages) {
+                                $form.find('.' + field + '-error').text(messages[0]);
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        }
+                        $submitBtn.prop('disabled', false).text('Save changes');
+                    }
+                });
+            });
+
+            // Real-time validation for required fields
+            $('#addAmenityForm input[name="amenity_name"]').on('blur', function() {
+                if($(this).val().trim() === '') {
+                    $(this).siblings('.amenity_name-error').text('Amenity name is required');
+                } else {
+                    $(this).siblings('.amenity_name-error').text('');
+                }
+            });
+
+            // Real-time validation for time fields
+            $('.timepicker, .timepicker-edit').on('change', function() {
+                let $form = $(this).closest('form');
+                let openTime = $form.find('input[name="open_time"]').val();
+                let closeTime = $form.find('input[name="close_time"]').val();
+                
+                if(openTime && closeTime) {
+                    if(openTime >= closeTime) {
+                        $form.find('.close_time-error').text('Close time must be after open time');
+                    } else {
+                        $form.find('.close_time-error').text('');
+                    }
+                }
+            });
         });
     </script>
     <style>
