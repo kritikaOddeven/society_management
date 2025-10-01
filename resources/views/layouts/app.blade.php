@@ -159,6 +159,194 @@
         }, 5000);
     </script>
 
+    <!-- Search Functionality -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('global-search');
+        const searchResults = document.getElementById('search-results');
+        const searchItemsContainer = document.getElementById('search-items-container');
+        const searchBackdrop = document.querySelector('.search-backdrop');
+        
+        // Define menu items with their routes and icons
+        const menuItems = [
+            { name: 'Dashboard', url: '{{ route("dashboard") }}', icon: 'fas fa-home', category: 'Main' },
+            @can('user.view')
+            { name: 'Users Management', url: '{{ route("users.index") }}', icon: 'fas fa-users', category: 'Main' },
+            @endcan
+            { name: 'Owner', url: '{{ route("owners.index") }}', icon: 'far fa-user', category: 'Main' },
+            { name: 'Tenant', url: '{{ route("tenants.index") }}', icon: 'fas fa-th', category: 'Tenant' },
+            { name: 'Rent', url: '{{ route("rents.index") }}', icon: 'fas fa-th', category: 'Tenant' },
+            { name: 'Tower', url: '{{ route("towers.index") }}', icon: 'fa-regular fa-building', category: 'Apartment' },
+            { name: 'Floor', url: '{{ route("floors.index") }}', icon: 'fa-regular fa-building', category: 'Apartment' },
+            { name: 'Apartment', url: '{{ route("apartments.index") }}', icon: 'fa-regular fa-building', category: 'Apartment' },
+            { name: 'Parking', url: '{{ route("parkings.index") }}', icon: 'fa-regular fa-building', category: 'Apartment' },
+            { name: 'Amenities', url: '{{ route("amenities.index") }}', icon: 'fas fa-th-large', category: 'Amenities' },
+            { name: 'Maintenance Report', url: '{{ url("reports") }}', icon: 'far fa-file-alt', category: 'Report' },
+            { name: 'Apartment Type', url: '{{ route("settings.types.index") }}', icon: 'fas fa-cog', category: 'Settings' },
+            { name: 'Service Type', url: '{{ route("settings.service_types.index") }}', icon: 'fas fa-cog', category: 'Settings' },
+            { name: 'Maintenance', url: '{{ route("settings.maintenance.index") }}', icon: 'fas fa-cog', category: 'Settings' },
+            { name: 'Events', url: '#', icon: 'fas fa-calendar', category: 'Main' },
+            { name: 'Profile', url: '{{ route("profile") }}', icon: 'far fa-user', category: 'User' }
+        ];
+
+        // Recent searches (stored in localStorage)
+        let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+
+        function performSearch(query) {
+            if (!query) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            const filteredItems = menuItems.filter(item => 
+                item.name.toLowerCase().includes(query.toLowerCase())
+            );
+
+            // Group results by category
+            const groupedResults = {};
+            filteredItems.forEach(item => {
+                if (!groupedResults[item.category]) {
+                    groupedResults[item.category] = [];
+                }
+                groupedResults[item.category].push(item);
+            });
+
+            // Build HTML
+            let html = '';
+
+            // Show recent searches if query is empty or short
+            if (query.length <= 2 && recentSearches.length > 0) {
+                html += '<div class="search-header">Recent Searches</div>';
+                recentSearches.slice(0, 3).forEach(search => {
+                    html += `
+                        <div class="search-item">
+                            <a href="${search.url}">
+                                <div class="search-icon bg-primary text-white mr-3">
+                                    <i class="${search.icon}"></i>
+                                </div>
+                                ${search.name}
+                            </a>
+                            <a href="#" class="search-close" onclick="removeRecentSearch('${search.name}'); return false;">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+            }
+
+            // Show search results
+            if (filteredItems.length > 0) {
+                Object.keys(groupedResults).forEach(category => {
+                    html += `<div class="search-header">${category}</div>`;
+                    groupedResults[category].forEach(item => {
+                        const bgColor = category === 'Settings' ? 'bg-warning' : 
+                                       category === 'Apartment' ? 'bg-info' :
+                                       category === 'Tenant' ? 'bg-success' :
+                                       category === 'Report' ? 'bg-danger' : 'bg-primary';
+                        
+                        html += `
+                            <div class="search-item">
+                                <a href="${item.url}" onclick="addToRecentSearch('${item.name}', '${item.url}', '${item.icon}')">
+                                    <div class="search-icon ${bgColor} text-white mr-3">
+                                        <i class="${item.icon}"></i>
+                                    </div>
+                                    ${item.name}
+                                </a>
+                            </div>
+                        `;
+                    });
+                });
+            } else if (query.length > 2) {
+                html = '<div class="search-header">No Results Found</div>';
+                html += '<div class="search-item">No menu items match your search.</div>';
+            }
+
+            searchItemsContainer.innerHTML = html;
+            searchResults.style.display = html ? 'block' : 'none';
+        }
+
+        // Search input event
+        searchInput.addEventListener('input', function(e) {
+            performSearch(e.target.value);
+        });
+
+        // Focus event - show results if there's text
+        searchInput.addEventListener('focus', function(e) {
+            if (e.target.value || recentSearches.length > 0) {
+                performSearch(e.target.value);
+            }
+        });
+
+        // Click outside to close
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Add to recent searches
+        window.addToRecentSearch = function(name, url, icon) {
+            const search = { name, url, icon };
+            recentSearches = recentSearches.filter(s => s.name !== name);
+            recentSearches.unshift(search);
+            recentSearches = recentSearches.slice(0, 5); // Keep only last 5
+            localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+        };
+
+        // Remove from recent searches
+        window.removeRecentSearch = function(name) {
+            recentSearches = recentSearches.filter(s => s.name !== name);
+            localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+            performSearch(searchInput.value);
+        };
+
+        // Handle keyboard navigation
+        searchInput.addEventListener('keydown', function(e) {
+            const items = searchItemsContainer.querySelectorAll('.search-item a:first-child');
+            const activeItem = searchItemsContainer.querySelector('.search-item.active');
+            let currentIndex = -1;
+            
+            if (activeItem) {
+                items.forEach((item, index) => {
+                    if (item.parentElement === activeItem) {
+                        currentIndex = index;
+                    }
+                });
+            }
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (currentIndex >= 0) {
+                    items[currentIndex].parentElement.classList.remove('active');
+                }
+                currentIndex = (currentIndex + 1) % items.length;
+                if (items[currentIndex]) {
+                    items[currentIndex].parentElement.classList.add('active');
+                    items[currentIndex].focus();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (currentIndex >= 0) {
+                    items[currentIndex].parentElement.classList.remove('active');
+                }
+                currentIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+                if (items[currentIndex]) {
+                    items[currentIndex].parentElement.classList.add('active');
+                    items[currentIndex].focus();
+                }
+            } else if (e.key === 'Enter') {
+                if (currentIndex >= 0 && items[currentIndex]) {
+                    e.preventDefault();
+                    items[currentIndex].click();
+                }
+            } else if (e.key === 'Escape') {
+                searchResults.style.display = 'none';
+                searchInput.blur();
+            }
+        });
+    });
+    </script>
+
 
 
     <!-- Common SweetAlert Functions -->
