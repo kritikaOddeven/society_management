@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('amenities', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('tower_id')->constrained('towers')->onDelete('cascade')->nullable();
+            $table->foreignId('tower_id')->nullable()->constrained('towers')->onDelete('cascade');
             $table->string('amenity_name');
             $table->string('open_time')->nullable();
             $table->string('close_time')->nullable();
