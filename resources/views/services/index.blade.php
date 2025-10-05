@@ -22,7 +22,6 @@
                                 </a>
                             </div>
                         </div>
-
                     </div>
 
                     <style>
@@ -163,6 +162,7 @@
                                             <th style="width: 200px">Action</th>
                                         </tr>
                                     </thead>
+                                    
                                     <tbody>
                                         @forelse($services as $key => $service)
                                             <tr>
@@ -200,10 +200,10 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('services.edit', $service->id) }}" class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-edit"></i> Edit
+                                                        <i class="fas fa-edit"></i> 
                                                     </a>
                                                     <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('{{ $service->id }}', '{{ $service->contact_person_name }}')">
-                                                        <i class="fas fa-trash"></i> Delete
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                     <form id="delete-form-{{ $service->id }}" action="{{ route('services.destroy', $service->id) }}" method="POST" style="display: none;">
                                                         @csrf
