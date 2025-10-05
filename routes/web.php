@@ -77,6 +77,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::resource('services', ServiceController::class);
+    Route::get('services/get-floors/{towerId}', [ServiceController::class, 'getFloors']);
+    Route::get('services/get-apartments/{floorId}', [ServiceController::class, 'getApartments']);
 
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::resource('types', ApartmentTypeController::class);
