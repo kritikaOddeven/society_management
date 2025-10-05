@@ -26,7 +26,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="tower_id">Select Tower <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
+                                            <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id">
                                                 <option value="">Select Tower Name</option>
                                                 @foreach ($towers as $tower)
                                                     <option value="{{ $tower->id }}" {{ old('tower_id', $apartment->tower_id) == $tower->id ? 'selected' : '' }}>
@@ -40,7 +40,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="floor">Select Floor <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id" required>
+                                            <select class="form-control @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id">
                                                 <option value="">Select Floor</option>
 
                                             </select>
@@ -98,7 +98,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="apartment_type">Apartment Type <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('apartment_type') is-invalid @enderror" id="apartment_type" name="apartment_type" required>
+                                            <select class="form-control @error('apartment_type') is-invalid @enderror" id="apartment_type" name="apartment_type">
                                                 <option value="">Select Apartment type</option>
                                                 @foreach ($types as $type)
                                                     <option value="{{ $type->id }}" {{ old('apartment_type', $apartment->apartment_type) == $type->id ? 'selected' : '' }}>
@@ -131,7 +131,7 @@
                                     <div class="col-md-6" id="owner_div" style="display: none;">
                                         <div class="form-group">
                                             <label for="owner_id">Select Owner <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('owner_id') is-invalid @enderror" id="owner_id" name="owner_id" required>
+                                            <select class="form-control @error('owner_id') is-invalid @enderror" id="owner_id" name="owner_id">
                                                 <option value=""> Select Owner</option>
                                                 @foreach ($owners as $owner)
                                                     <option value="{{ $owner->id }}" {{ isset($apartment) && $apartment->owner_id == $owner->id ? 'selected' : '' }}>

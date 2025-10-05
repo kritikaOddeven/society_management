@@ -13,6 +13,7 @@ use App\Http\Controllers\AmenitieController;
 use App\Http\Controllers\RentController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceTypeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -75,9 +76,11 @@ Route::middleware('auth')->group(function () {
         return view('reports.maintenance');
     });
 
+    Route::resource('services', ServiceController::class);
+
     Route::prefix('settings')->as('settings.')->group(function () {
         Route::resource('types', ApartmentTypeController::class);
-        Route::resource('service_types', ServiceController::class);
+        Route::resource('service_types', ServiceTypeController::class);
         Route::resource('maintenance', MaintenanceController::class);
         
     });

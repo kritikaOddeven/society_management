@@ -26,7 +26,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="full_name">Full Name *</label>
-                                            <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" value="{{ old('full_name', $user->full_name ?? $user->name) }}" required>
+                                            <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" value="{{ old('full_name', $user->full_name ?? $user->name) }}" >
                                             @error('full_name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -35,7 +35,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="email">Email Address *</label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}" >
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -55,7 +55,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="role">Role *</label>
-                                            <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" required>
+                                            <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" >
                                                 <option value="">Select Role</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->name }}" {{ old('role', $user->roles->first()->name ?? '') == $role->name ? 'selected' : '' }}>

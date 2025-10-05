@@ -7,10 +7,10 @@
             <a href="{{ route('dashboard') }}">SM</a>
         </div>
         <ul class="sidebar-menu">
-            <li><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+            <li class="{{ Request()->is('dashboard*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
 
             @can('user.view')
-                <li><a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i> <span>Users Management</span></a></li>
+                <li class="{{ Request()->is('users*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i> <span>Users Management</span></a></li>
             @endcan
 
             <li  class="{{ Request()->is('owners*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('owners.index') }}"><i class="far fa-user"></i> <span>Owner</span></a></li>
@@ -33,22 +33,29 @@
                 </ul>
             </li>
 
-            <li class="dropdown">
+            <li class="dropdown {{ Request()->is(['amenities*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i> <span>Amenities</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link"  href="{{ route('amenities.index') }}">Amenities</a></li>
+                    <li class="{{ Request()->is('amenities') ? 'active' : '' }}"><a class="nav-link"  href="{{ route('amenities.index') }}">Amenities</a></li>
                     {{-- <li><a class="nav-link beep beep-sidebar" href="">Book Amenity</a></li> --}}
                 </ul>
             </li>
 
-            <li class="dropdown">
+            <li class="dropdown {{ Request()->is(['bills*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Bills</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="">Maintenance</a></li>
                 </ul>
             </li>
 
-            <li><a class="nav-link" href="blank.html"><i class="fas fa-calendar"></i> <span>Events</span></a></li>
+            <li class="dropdown {{ Request()->is(['services*']) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-phone"></i> <span>Services</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request()->is('services') ? 'active' : '' }}"><a class="nav-link" href="{{ route('services.index') }}">Services</a></li>
+                </ul>
+            </li>
+
+            <li class="{{ Request()->is('owners*') ? 'active' : '' }}"><a class="nav-link" href="blank.html"><i class="fas fa-calendar"></i> <span>Events</span></a></li>
 
             <li class="dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Report</span></a>
@@ -57,11 +64,11 @@
                 </ul>
             </li>
 
-            <li class="dropdown  {{ Request()->is(['settings*', 'types*', 'maintenance*']) ? 'active' : '' }}">
+            <li class="dropdown {{ Request()->is(['settings*', 'types*', 'maintenance*', 'service_types*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
                 <ul class="dropdown-menu">
-                    <li  class="{{ Request()->is('types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.types.index') }}">Apartment Type</a></li>
-                    <li  class="{{ Request()->is('service_types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.service_types.index') }}">Service Type</a></li>
+                    <li class="{{ Request()->is('types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.types.index') }}">Apartment Type</a></li>
+                    <li class="{{ Request()->is('service_types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.service_types.index') }}">Service Type</a></li>
                     <li class="{{ Request()->is('maintenance') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.maintenance.index') }}">Maintenance</a></li>
                 </ul>
             </li>

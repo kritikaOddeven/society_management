@@ -6,7 +6,7 @@
         <div class="section-header">
             <h1>Add User</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="{{ url('/') }}">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></div>
                 <div class="breadcrumb-item">Add User</div>
             </div>
@@ -22,19 +22,19 @@
                             <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="full_name">Full Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" value="{{ old('full_name') }}" required>
+                                            <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name" name="full_name" value="{{ old('full_name') }}" >
                                             @error('full_name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="email">Email Address  <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" >
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -61,6 +61,7 @@
                                             @enderror
                                         </div>
                                     </div> --}}
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="phone_number">Phone Number</label>
@@ -71,10 +72,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="role">Role  <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" required>
+                                            <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" >
                                                 <option value="">Select Role</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
@@ -87,17 +88,17 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="password">Password  <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" >
                                             @error('password')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="profile_image">Profile Image</label>
                                             <div class="custom-file">

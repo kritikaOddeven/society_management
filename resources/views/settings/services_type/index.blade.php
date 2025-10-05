@@ -48,6 +48,7 @@
                                     <thead>
                                         <tr>
                                             <th>S.No</th>
+                                            <th>Icon</th>
                                             <th>Service Name</th>
                                             <th>Status</th>
                                             <th style="width: 200px">Action</th>
@@ -57,6 +58,7 @@
                                          @foreach ($types as $key => $type)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
+                                                <td> <i class="{{ $type->service_icon }}"></i></td>
                                                 <td>{{ $type->service_type }}</td>
                                                  <td>
                                                     @if ($type->status === 'active')
@@ -67,7 +69,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editATypeModal{{ $type->id }}"><i class="fas fa-pencil-alt"></i></button>
+                                                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#editSTypeModal{{ $type->id }}"><i class="fas fa-pencil-alt"></i></button>
                                                         <form action="{{ route('settings.service_types.destroy', $type->id) }}" method="POST" style="display: inline;">
                                                             @csrf
                                                             @method('DELETE')
@@ -91,8 +93,8 @@
     </section>
     {{-- End main section --}}
     @include('settings.services_type.create')
-        {{-- @foreach ($types as $key => $typ)
+        @foreach ($types as $key => $typ)
             @include('settings.services_type.edit', ['type' => $typ])
 
-        @endforeach --}}
+        @endforeach
 @endsection
