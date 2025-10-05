@@ -21,7 +21,7 @@
                                     <label>Service Type <span class="text-danger">*</span></label>
                                     <select name="service_type_id" class="form-control @error('service_type_id') is-invalid @enderror" required>
                                         <option value="">Select Service Type</option>
-                                        @foreach($types as $type)
+                                        @foreach ($types as $type)
                                             <option value="{{ $type->id }}" {{ old('service_type_id') == $type->id ? 'selected' : '' }}>
                                                 {{ $type->service_type }}
                                             </option>
@@ -45,7 +45,7 @@
                                             <label>Select Tower</label>
                                             <select name="tower_id" id="tower_id" class="form-control @error('tower_id') is-invalid @enderror">
                                                 <option value="">Select Tower</option>
-                                                @foreach($towers as $tower)
+                                                @foreach ($towers as $tower)
                                                     <option value="{{ $tower->id }}" {{ old('tower_id') == $tower->id ? 'selected' : '' }}>
                                                         {{ $tower->tower_name ?? $tower->name }}
                                                     </option>
@@ -78,36 +78,51 @@
                                             @enderror
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label>Contact person name <span class="text-danger">*</span></label>
-                                    <input type="text" name="contact_person_name" class="form-control @error('contact_person_name') is-invalid @enderror" value="{{ old('contact_person_name') }}" required>
-                                    @error('contact_person_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Contact Number <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <select name="country_code" class="form-control" style="max-width: 150px;">
-                                                @foreach($countryCodes as $code => $label)
-                                                    <option value="{{ $code }}" {{ old('country_code', '+1') == $code ? 'selected' : '' }}>
-                                                        {{ $label }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Contact person name <span class="text-danger">*</span></label>
+                                            <input type="text" name="contact_person_name" class="form-control @error('contact_person_name') is-invalid @enderror" value="{{ old('contact_person_name') }}" required>
+                                            @error('contact_person_name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
-                                        <input type="text" name="contact_number" class="form-control @error('contact_number') is-invalid @enderror" value="{{ old('contact_number') }}" required>
                                     </div>
-                                    @error('contact_number')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
 
-                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Contact Number <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <select name="country_code" class="form-control" style="max-width: 150px;">
+                                                        {{-- @foreach ($countryCodes as $code => $label)
+                                                            <option value="{{ $code }}" {{ old('country_code', '+1') == $code ? 'selected' : '' }}>
+                                                                {{ $label }}
+                                                            </option>
+                                                        @endforeach --}}
+                                                        <option value="+91" {{ old('country_code') == '+91' ? 'selected' : '' }}>+91</option>
+                                                    <option value="+93" {{ old('country_code') == '+93' ? 'selected' : '' }}>+93</option>
+                                                    <option value="+1"  {{ old('country_code') == '+1'  ? 'selected' : '' }}>+1</option>
+                                                    <option value="+44" {{ old('country_code') == '+44' ? 'selected' : '' }}>+44</option>
+                                                    <option value="+86" {{ old('country_code') == '+86' ? 'selected' : '' }}>+86</option>
+                                                    <option value="+81" {{ old('country_code') == '+81' ? 'selected' : '' }}>+81</option>
+                                                    <option value="+49" {{ old('country_code') == '+49' ? 'selected' : '' }}>+49</option>
+                                                    <option value="+33" {{ old('country_code') == '+33' ? 'selected' : '' }}>+33</option>
+                                                    <option value="+39" {{ old('country_code') == '+39' ? 'selected' : '' }}>+39</option>
+                                                    <option value="+34" {{ old('country_code') == '+34' ? 'selected' : '' }}>+34</option>
+                                                    </select>
+                                                </div>
+                                                <input type="text" name="contact_number" class="form-control @error('contact_number') is-invalid @enderror" value="{{ old('contact_number') }}" required>
+                                            </div>
+                                            @error('contact_number')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                    </div>
+
+
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Company Name</label>
@@ -126,43 +141,49 @@
                                             @enderror
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{ old('description') }}</textarea>
-                                    @error('description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
 
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select name="status" class="form-control @error('status') is-invalid @enderror" required>
-                                        <option value="available" {{ old('status', 'available') == 'available' ? 'selected' : '' }}>Available</option>
-                                        <option value="unavailable" {{ old('status') == 'unavailable' ? 'selected' : '' }}>Unavailable</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Upload Photo</label>
-                                    <div class="custom-file">
-                                        <input type="file" name="photo" class="custom-file-input @error('photo') is-invalid @enderror" id="photo" accept="image/*">
-                                        <label class="custom-file-label" for="photo">Choose file</label>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{ old('description') }}</textarea>
+                                            @error('description')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
-                                    @error('photo')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                    <small class="text-muted">Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB</small>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select name="status" class="form-control @error('status') is-invalid @enderror" required>
+                                                <option value="available" {{ old('status', 'available') == 'available' ? 'selected' : '' }}>Available</option>
+                                                <option value="unavailable" {{ old('status') == 'unavailable' ? 'selected' : '' }}>Unavailable</option>
+                                            </select>
+                                            @error('status')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Upload Photo</label>
+                                            <div class="custom-file">
+                                                <input type="file" name="photo" class="custom-file-input @error('photo') is-invalid @enderror" id="photo" accept="image/*">
+                                                <label class="custom-file-label" for="photo">Choose file</label>
+                                            </div>
+                                            @error('photo')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
+                                            <small class="text-muted">Accepted formats: JPEG, PNG, JPG, GIF. Max size: 2MB</small>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-footer text-right">
-                                <button type="submit" class="btn btn-primary">Save</button>
-                                <a href="{{ route('services.index') }}" class="btn btn-secondary">Cancel</a>
-                            </div>
+                                <div class="card-footer text-right">
+                                    <a href="{{ route('services.index') }}" class="btn btn-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -172,49 +193,49 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    $(document).ready(function() {
-        let towers = @json($towers);
-        
-        // Update file input label when file is selected
-        $('.custom-file-input').on('change', function() {
-            let fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').html(fileName);
-        });
+        $(document).ready(function() {
+            let towers = @json($towers);
 
-        // Load floors when tower is selected
-        $('#tower_id').on('change', function() {
-            let towerId = $(this).val();
-            $('#floor_id').empty().append('<option value="">Select Floor</option>');
-            $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
-            
-            if(towerId) {
-                let selectedTower = towers.find(t => t.id == towerId);
-                if (selectedTower && selectedTower.floors) {
-                    selectedTower.floors.forEach(floor => {
-                        $('#floor_id').append(`<option value="${floor.id}">${floor.floor_name || floor.name}</option>`);
-                    });
-                }
-            }
-        });
+            // Update file input label when file is selected
+            $('.custom-file-input').on('change', function() {
+                let fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
 
-        // Load apartments when floor is selected
-        $('#floor_id').on('change', function() {
-            let towerId = $('#tower_id').val();
-            let floorId = $(this).val();
-            $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
-            
-            if(towerId && floorId) {
-                let selectedTower = towers.find(t => t.id == towerId);
-                if (selectedTower && selectedTower.floors) {
-                    let selectedFloor = selectedTower.floors.find(f => f.id == floorId);
-                    if (selectedFloor && selectedFloor.apartments) {
-                        selectedFloor.apartments.forEach(apartment => {
-                            $('#apartment_id').append(`<option value="${apartment.id}">${apartment.apartment_number}</option>`);
+            // Load floors when tower is selected
+            $('#tower_id').on('change', function() {
+                let towerId = $(this).val();
+                $('#floor_id').empty().append('<option value="">Select Floor</option>');
+                $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
+
+                if (towerId) {
+                    let selectedTower = towers.find(t => t.id == towerId);
+                    if (selectedTower && selectedTower.floors) {
+                        selectedTower.floors.forEach(floor => {
+                            $('#floor_id').append(`<option value="${floor.id}">${floor.floor_name || floor.name}</option>`);
                         });
                     }
                 }
-            }
+            });
+
+            // Load apartments when floor is selected
+            $('#floor_id').on('change', function() {
+                let towerId = $('#tower_id').val();
+                let floorId = $(this).val();
+                $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
+
+                if (towerId && floorId) {
+                    let selectedTower = towers.find(t => t.id == towerId);
+                    if (selectedTower && selectedTower.floors) {
+                        let selectedFloor = selectedTower.floors.find(f => f.id == floorId);
+                        if (selectedFloor && selectedFloor.apartments) {
+                            selectedFloor.apartments.forEach(apartment => {
+                                $('#apartment_id').append(`<option value="${apartment.id}">${apartment.apartment_number}</option>`);
+                            });
+                        }
+                    }
+                }
+            });
         });
-    });
     </script>
 @endsection
