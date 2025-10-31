@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Apartment;
 use App\Models\Owner;
 use App\Models\Tower;
+use App\Models\Parking;
 use Illuminate\Http\Request;
 
 class OwnerController extends Controller
@@ -71,13 +72,12 @@ class OwnerController extends Controller
 
     public function show($id)
     {
-        $owner = Owner::findOrFail($id);
-
+        $owner = Owner::with('apartments')->findOrFail($id);
         // Load towers with floors and apartments (only unsold apartments)
         $towers = Tower::with(['floors.apartments' => function ($q) {
             $q->where('status', 'Unsold');
         }])->get();
-
+        // $parking_codes = Parking::whereIn('id', json_decode($owner->apartments->parking_id))->pluck('parking_code')->toArray();
         return view('owners.view', compact('owner', 'towers'));
     }
 

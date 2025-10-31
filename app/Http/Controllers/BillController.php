@@ -1,14 +1,15 @@
 <?php
-
 namespace App\Http\Controllers;
+use App\Models\Rent;
 
-use Illuminate\Http\Request;
 
 class BillController extends Controller
 {
-  public function index()
+    public function index()
     {
-       
-        return view('bills.index');
+        $years  = Rent::getYears();
+        $months = Rent::getMonths();
+        return view('bills.index', compact('years', 'months'));
+
     }
 }

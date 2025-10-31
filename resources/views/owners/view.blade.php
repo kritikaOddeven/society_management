@@ -85,7 +85,26 @@
                                                 <span> Parking Code </span>
                                             </div>
                                             <div class="col-md-8">
-                                                <p>{{ $owner->apartment->parking->parking_number ?? '-' }}</p>
+                                                @php
+                                                    // Collect all parking IDs from all apartments
+                                                    $allParkingIds = $owner->apartments
+                                                        ->pluck('parking_id') // get all parking_id values
+                                                        ->filter() // remove null/empty
+                                                        ->map(function ($ids) {
+                                                            return json_decode($ids, true); // convert JSON string to array
+                                                        })
+                                                        ->flatten() // merge all arrays into one
+                                                        ->unique() // remove duplicates
+                                                        ->values() // reindex
+                                                        ->toArray();
+
+                                                    // Fetch parking codes for those IDs
+                                                    $parkingCodes = \App\Models\Parking::whereIn('id', $allParkingIds)->pluck('parking_code')->toArray();
+                                                @endphp
+
+                                                <p>{{ !empty($parkingCodes) ? implode(', ', $parkingCodes) : '-' }}</p>
+
+
 
                                             </div>
                                         </div>
@@ -128,12 +147,16 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {{-- @foreach ($owner as $key => $item) --}}
+                                                        @foreach ($owner->apartments as $key => $apartment)
                                                             <tr>
-                                                                {{-- <td>{{ ++$key }}</td> --}}
-                                                                <td>{{ $owner->apartment->apartment_number ?? '-' }}</td>
+                                                                <td>{{ ++$key }}</td>
+                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
+                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
+                                                                <td>{{ $apartment->apartment_type ?? '-' }}</td>
+                                                                <td>{{ $apartment->tower->tower_name ?? '-' }}</td>
+                                                                <td>{{ $apartment->floor->floor_name ?? '-' }}</td>
                                                             </tr>
-                                                        {{-- @endforeach --}}
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>

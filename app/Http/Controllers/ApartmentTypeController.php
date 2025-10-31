@@ -21,7 +21,7 @@ class ApartmentTypeController extends Controller
 
         ApartmentType::create($request->all());
 
-        return redirect()->route('types.index')->with('success', 'Apartment Type created successfully.');
+        return redirect('settings/types')->with('success', 'Apartment Type created successfully.');
     }
 
       public function update(Request $request, $id)
@@ -34,7 +34,7 @@ class ApartmentTypeController extends Controller
         $type->apartment_type = $request->apartment_type;
         $type->save();
 
-        return redirect()->route('types.index')->with('success', 'Tower updated successfully.');
+        return redirect('settings/types')->with('success', 'Tower updated successfully.');
     }
 
     public function destroy( $id)

@@ -16,7 +16,11 @@
                             <div class="form-group">
                                 <label for="month">Month <span class="text-danger req-star">*</span></label>
                                 <select class="form-control" id="month" name="month">
-                                    <option value="">Select Month</option>
+                                    @foreach ($months as $month)
+                                        <option value="{{ $month }}" {{ old('month', date('F')) == $month ? 'selected' : '' }}>
+                                            {{ $month }}
+                                        </option>
+                                    @endforeach
 
                                 </select>
                                 <span class="text-danger month-error"></span>
@@ -27,7 +31,11 @@
                             <div class="form-group">
                                 <label for="year">Year <span class="text-danger req-star">*</span></label>
                                 <select class="form-control" id="year" name="year">
-                                    <option value="">Select Year</option>
+                                    @foreach ($years as $year)
+                                        <option value="{{ $year }}" {{ old('year', date('Y')) == $year ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endforeach
 
                                 </select>
                                 <span class="text-danger year-error"></span>

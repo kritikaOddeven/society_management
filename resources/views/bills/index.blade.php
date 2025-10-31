@@ -109,7 +109,7 @@
         </div>
     </section>
     {{-- End main section --}}
-    @include('bills.create')
+    @include('bills.create', ['years' => $years, 'months' => $months])
     {{-- @foreach ($rents as $key => $rent)
         @include('rents.pay-modal', ['rent' => $rent])
     @endforeach --}}
