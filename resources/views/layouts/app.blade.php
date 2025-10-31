@@ -456,6 +456,17 @@
     }
     </script>
 
+     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize Flatpickr for payment date
+        flatpickr('#datepicker', {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'F j, Y',
+            maxDate: 'today'
+        });
+        </script>
+
     @yield('scripts')
 </body>
 

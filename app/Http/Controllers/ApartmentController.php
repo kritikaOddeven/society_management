@@ -132,7 +132,7 @@ class ApartmentController extends Controller
             'owner_id'         => 'nullable|exists:owners,id',
             'parking_id'       => 'nullable|array',
             'parking_id.*'     => 'exists:parkings,id',
-            'status'           => 'nullable|in:Available,Occupied,Maintenance,Unsold',
+            'status'           => 'nullable|in:Available,Occupied,Maintenance,Unsold','Rent', 'Rented',
         ], [
             'tower_id.required' => 'Tower selection is required',
             'tower_id.exists' => 'Selected tower is invalid',

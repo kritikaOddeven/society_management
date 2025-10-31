@@ -69,6 +69,18 @@ class OwnerController extends Controller
         return redirect()->route('owners.index')->with('success', 'Owner created successfully.');
     }
 
+    public function show($id)
+    {
+        $owner = Owner::findOrFail($id);
+
+        // Load towers with floors and apartments (only unsold apartments)
+        $towers = Tower::with(['floors.apartments' => function ($q) {
+            $q->where('status', 'Unsold');
+        }])->get();
+
+        return view('owners.view', compact('owner', 'towers'));
+    }
+
     public function edit($id)
     {
         $owner = Owner::findOrFail($id);

@@ -100,18 +100,20 @@
                                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                                 <option value="Unpaid" {{ old('status') == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
                                                 <option value="Paid" {{ old('status') == 'Paid' ? 'selected' : '' }}>Paid</option>
-                                            @error('status')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                                @error('status')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </select>
                                         </div>
                                     </div>
 
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-6" id="payment_date_field" style="display: none;">
                                         <div class="form-group">
                                             <label for="payment_date">Payment Date</label>
-                                            <input type="text" class="form-control flatpickr @error('payment_date') is-invalid @enderror" 
-                                                id="payment_date" name="payment_date" value="{{ old('payment_date') }}" 
-                                                placeholder="Select payment date">
+                                            <input type="text" class="form-control flatpickr @error('payment_date') is-invalid @enderror" id="datepicker" name="payment_date" value="{{ old('payment_date') }}" placeholder="Select payment date">
                                             @error('payment_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -121,8 +123,7 @@
                                     <div class="col-md-6" id="payment_image_field" style="display: none;">
                                         <div class="form-group">
                                             <label for="payment_image">Payment Proof (Optional)</label>
-                                            <input type="file" class="form-control @error('payment_image') is-invalid @enderror" 
-                                                id="payment_image" name="payment_image" accept="image/*">
+                                            <input type="file" class="form-control @error('payment_image') is-invalid @enderror" id="payment_image" name="payment_image" accept="image/*">
                                             <small class="form-text text-muted">Upload payment receipt or proof (JPG, PNG, PDF)</small>
                                             @error('payment_image')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -132,15 +133,15 @@
 
                                 </div>
 
-                            <div class="form-group d-flex justify-content-end">
-                                <a href="{{ route('rents.index') }}" class="btn btn-secondary mr-2">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
+                                <div class="form-group d-flex justify-content-end">
+                                    <a href="{{ route('rents.index') }}" class="btn btn-secondary mr-2">Cancel</a>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
     {{-- End main section --}}
@@ -173,7 +174,7 @@
                 if (towerId) {
                     const tower = towers.find(t => t.id == towerId);
                     if (tower && tower.floors) {
-                        
+
                         tower.floors.forEach(floor => {
                             console.log('floor', floor);
                             $('#floor_id').append(
@@ -217,7 +218,7 @@
                 const selectedOption = $(this).find(':selected');
                 const tenantName = selectedOption.data('tenant-name');
                 const rentAmount = selectedOption.data('rent-amount');
-                
+
                 // Auto-populate tenant name and rent amount
                 if (tenantName) {
                     $('#tenant_name').val(tenantName);
@@ -225,7 +226,7 @@
                     $('#tenant_name').val('');
                     alert('No tenant found for this apartment');
                 }
-                
+
                 if (rentAmount) {
                     $('#rent_amount').val(rentAmount);
                 }
@@ -253,4 +254,3 @@
         });
     </script>
 @endsection
-

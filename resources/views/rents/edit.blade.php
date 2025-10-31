@@ -40,14 +40,8 @@
                                             <select class="form-control @error('tower_id') is-invalid @enderror" id="tower_id" name="tower_id" required>
                                                 <option value="">Select Tower</option>
                                                 @foreach ($towers as $tower)
-<<<<<<< HEAD
-                                                    <option value="{{ $tower->id }}" 
-                                                        {{ old('tower_id', $rent->tower_id) == $tower->id ? 'selected' : '' }}>
-                                                        {{ $tower->tower_name }}
-=======
                                                     <option value="{{ $tower->id }}" {{ old('tower_id', $rent->tower_id) == $tower->id ? 'selected' : '' }}>
                                                         {{ $tower->name }}
->>>>>>> 7a9f4f530062abf2f0d2264a8e2b20e7ececb910
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -185,105 +179,52 @@
     </section>
     {{-- End main section --}}
 
-<<<<<<< HEAD
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    // Initialize Flatpickr for payment date
-    flatpickr('#payment_date', {
-        dateFormat: 'Y-m-d',
-        altInput: true,
-        altFormat: 'F j, Y',
-        maxDate: 'today'
-    });
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    @endpush
 
-    // Tower data with floors and apartments
-    const towers = @json($towers);
-    const currentRent = @json($rent);
-
-    // Ensure the page is fully loaded
-    $(window).on('load', function() {
-        // Initialize with current values if tower is already selected
-        if (currentRent.tower_id) {
-            // Load floors for the selected tower
-            const tower = towers.find(t => t.id == currentRent.tower_id);
-            if (tower && tower.floors) {
-                const floorSelect = $('#floor_id');
-                floorSelect.empty().append('<option value="">Select Floor</option>');
-                
-                tower.floors.forEach(floor => {
-                    floorSelect.append(
-                        `<option value="${floor.id}">${floor.floor_name}</option>`
-                    );
-                });
-                
-                // Set the selected floor
-                floorSelect.val(currentRent.floor_id);
-                
-                // Load apartments for the selected floor
-                const floor = tower.floors.find(f => f.id == currentRent.floor_id);
-                if (floor && floor.apartments) {
-                    const apartmentSelect = $('#apartment_id');
-                    apartmentSelect.empty().append('<option value="">Select Apartment</option>');
-                    
-                    floor.apartments.forEach(apartment => {
-                        apartmentSelect.append(`<option value="${apartment.id}" 
-                            data-tenant-name="${apartment.tenant ? apartment.tenant.name : ''}"
-                            data-rent-amount="${apartment.tenant ? apartment.tenant.rent_amount : ''}">
-                            ${apartment.apartment_number}
-                        </option>`);
-                    });
-                    
-                    // Set the selected apartment
-                    apartmentSelect.val(currentRent.apartment_id);
-                }
-            }
-        }
-    });
-
-    $(document).ready(function() {
-        
-        // Handle tower selection
-        $('#tower_id').on('change', function() {
-            const towerId = $(this).val();
-            loadFloors(towerId);
-=======
-@push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-@endpush
-
-@push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        // Initialize Flatpickr for payment date
-        flatpickr('#payment_date', {
-            dateFormat: 'Y-m-d',
-            altInput: true,
-            altFormat: 'F j, Y',
-            maxDate: 'today'
->>>>>>> 7a9f4f530062abf2f0d2264a8e2b20e7ececb910
-        });
-
-        // Tower data with floors and apartments
-        const towers = @json($towers);
-        const currentRent = @json($rent);
-
-        $(document).ready(function() {
-            // Initialize with current values
-            loadFloors(currentRent.tower_id, currentRent.floor_id);
-
-            // Handle tower selection
-            $('#tower_id').on('change', function() {
-                const towerId = $(this).val();
-                loadFloors(towerId);
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script>
+            // Initialize Flatpickr for payment date
+            flatpickr('#payment_date', {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'F j, Y',
+                maxDate: 'today'
             });
 
-            // Handle floor selection
-            $('#floor_id').on('change', function() {
-                const towerId = $('#tower_id').val();
-                const floorId = $(this).val();
-                loadApartments(towerId, floorId);
+            // Tower data with floors and apartments
+            const towers = @json($towers);
+            const currentRent = @json($rent);
+
+            $(document).ready(function() {
+                // Initialize with current values
+                loadFloors(currentRent.tower_id, currentRent.floor_id);
+
+                // Handle tower selection
+                $('#tower_id').on('change', function() {
+                    const towerId = $(this).val();
+                    loadFloors(towerId);
+                });
+
+                // Handle floor selection
+                $('#floor_id').on('change', function() {
+                    const towerId = $('#tower_id').val();
+                    const floorId = $(this).val();
+                    loadApartments(towerId, floorId);
+                });
+
+                // Handle apartment selection
+                $('#apartment_id').on('change', function() {
+                    const selectedOption = $(this).find(':selected');
+
+                    if (selectedOption.val()) {
+                        $('#tenant_name').val(selectedOption.data('tenant-name') || '');
+                        $('#rent_amount').val(selectedOption.data('rent-amount') || $('#rent_amount').val());
+                    }
+                });
             });
 
             // Handle apartment selection
@@ -295,21 +236,9 @@
                     $('#rent_amount').val(selectedOption.data('rent-amount') || $('#rent_amount').val());
                 }
             });
-        });
 
-<<<<<<< HEAD
-        // Handle apartment selection
-        $('#apartment_id').on('change', function() {
-            const selectedOption = $(this).find(':selected');
-            
-            if (selectedOption.val()) {
-                $('#tenant_name').val(selectedOption.data('tenant-name') || '');
-                $('#rent_amount').val(selectedOption.data('rent-amount') || $('#rent_amount').val());
-            }
-        });
-
-        // Handle status change to show/hide payment fields
-        $('#status').on('change', function() {
+            // Handle status change to show/hide payment fields
+            $('#status').on('change', function() {
             const status = $(this).val();
             if (status === 'Paid') {
                 $('#payment_date_field').show();
@@ -320,129 +249,125 @@
                 $('#payment_date').val('');
                 $('#payment_image').val('');
             }
-        });
-    });
+            });
+            });
 
-    function loadFloorsAndApartments(towerId, selectedFloorId, selectedApartmentId) {
-        const floorSelect = $('#floor_id');
-        const apartmentSelect = $('#apartment_id');
-        
-        // Reset dropdowns
-        floorSelect.empty().append('<option value="">Select Floor</option>');
-        apartmentSelect.empty().append('<option value="">Select Apartment</option>');
-        
-        if (towerId) {
-            const tower = towers.find(t => t.id == towerId);
-            if (tower && tower.floors) {
-                // Load floors
-                tower.floors.forEach(floor => {
-                    // Use == for comparison to handle string/number type differences
-                    const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
-                    floorSelect.append(
-                        `<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`
-                    );
-                });
-                
-                // Load apartments for selected floor
-                if (selectedFloorId) {
-                    const floor = tower.floors.find(f => f.id == selectedFloorId);
-                    if (floor && floor.apartments) {
-                        floor.apartments.forEach(apartment => {
+            function loadFloorsAndApartments(towerId, selectedFloorId, selectedApartmentId) {
+                const floorSelect = $('#floor_id');
+                const apartmentSelect = $('#apartment_id');
+
+                // Reset dropdowns
+                floorSelect.empty().append('<option value="">Select Floor</option>');
+                apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+
+                if (towerId) {
+                    const tower = towers.find(t => t.id == towerId);
+                    if (tower && tower.floors) {
+                        // Load floors
+                        tower.floors.forEach(floor => {
                             // Use == for comparison to handle string/number type differences
-                            const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
-                            const option = `<option value="${apartment.id}" 
+                            const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
+                            floorSelect.append(
+                                `<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`
+                            );
+                        });
+
+                        // Load apartments for selected floor
+                        if (selectedFloorId) {
+                            const floor = tower.floors.find(f => f.id == selectedFloorId);
+                            if (floor && floor.apartments) {
+                                floor.apartments.forEach(apartment => {
+                                    // Use == for comparison to handle string/number type differences
+                                    const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
+                                    const option = `<option value="${apartment.id}" 
                                 data-tenant-name="${apartment.tenant ? apartment.tenant.name : ''}"
                                 data-rent-amount="${apartment.tenant ? apartment.tenant.rent_amount : ''}"
                                 ${selected}>
                                 ${apartment.apartment_number}
                             </option>`;
-                            apartmentSelect.append(option);
+                                    apartmentSelect.append(option);
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            function loadFloors(towerId, selectedFloorId = null) {
+                const floorSelect = $('#floor_id');
+                const apartmentSelect = $('#apartment_id');
+
+                // Reset dropdowns
+                floorSelect.empty().append('<option value="">Select Floor</option>');
+                apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+
+                if (towerId) {
+                    const tower = towers.find(t => t.id == towerId);
+                    if (tower && tower.floors) {
+                        tower.floors.forEach(floor => {
+                            const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
+                            floorSelect.append(
+                                `<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`
+                            );
                         });
-                    }
-                }
-            }
-        }
-    }
 
-    function loadFloors(towerId, selectedFloorId = null) {
-        const floorSelect = $('#floor_id');
-        const apartmentSelect = $('#apartment_id');
-        
-        // Reset dropdowns
-        floorSelect.empty().append('<option value="">Select Floor</option>');
-        apartmentSelect.empty().append('<option value="">Select Apartment</option>');
-        
-        if (towerId) {
-            const tower = towers.find(t => t.id == towerId);
-            if (tower && tower.floors) {
-                tower.floors.forEach(floor => {
-                    const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
-                    floorSelect.append(
-                        `<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`
-                    );
-                });
-                
-                // If floor was selected, load apartments
-                if (selectedFloorId) {
-                    loadApartments(towerId, selectedFloorId, currentRent.apartment_id);
-=======
-        function loadFloors(towerId, selectedFloorId = null) {
-            const floorSelect = $('#floor_id');
-            const apartmentSelect = $('#apartment_id');
+                        // If floor was selected, load apartments
+                        if (selectedFloorId) {
+                            loadApartments(towerId, selectedFloorId, currentRent.apartment_id);
 
-            // Reset dropdowns
-            floorSelect.empty().append('<option value="">Select Floor</option>');
-            apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+                            function loadFloors(towerId, selectedFloorId = null) {
+                                const floorSelect = $('#floor_id');
+                                const apartmentSelect = $('#apartment_id');
 
-            if (towerId) {
-                const tower = towers.find(t => t.id == towerId);
-                if (tower && tower.floors) {
-                    tower.floors.forEach(floor => {
-                        const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
-                        floorSelect.append(
-                            `<option value="${floor.id}" ${selected}>${floor.name}</option>`
-                        );
-                    });
+                                // Reset dropdowns
+                                floorSelect.empty().append('<option value="">Select Floor</option>');
+                                apartmentSelect.empty().append('<option value="">Select Apartment</option>');
 
-                    // If floor was selected, load apartments
-                    if (selectedFloorId) {
-                        loadApartments(towerId, selectedFloorId, currentRent.apartment_id);
-                    }
->>>>>>> 7a9f4f530062abf2f0d2264a8e2b20e7ececb910
-                }
-            }
-        }
+                                if (towerId) {
+                                    const tower = towers.find(t => t.id == towerId);
+                                    if (tower && tower.floors) {
+                                        tower.floors.forEach(floor => {
+                                            const selected = selectedFloorId && floor.id == selectedFloorId ? 'selected' : '';
+                                            floorSelect.append(
+                                                `<option value="${floor.id}" ${selected}>${floor.name}</option>`
+                                            );
+                                        });
 
-        function loadApartments(towerId, floorId, selectedApartmentId = null) {
-            const apartmentSelect = $('#apartment_id');
+                                        // If floor was selected, load apartments
+                                        if (selectedFloorId) {
+                                            loadApartments(towerId, selectedFloorId, currentRent.apartment_id);
+                                        }
+                                    }
+                                }
+                            }
 
-            // Reset apartment dropdown
-            apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+                            function loadApartments(towerId, floorId, selectedApartmentId = null) {
+                                const apartmentSelect = $('#apartment_id');
 
-            if (towerId && floorId) {
-                const tower = towers.find(t => t.id == towerId);
-                if (tower && tower.floors) {
-                    const floor = tower.floors.find(f => f.id == floorId);
-                    if (floor && floor.apartments) {
-                        floor.apartments.forEach(apartment => {
-                            const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
-                            const option = `<option value="${apartment.id}" 
+                                // Reset apartment dropdown
+                                apartmentSelect.empty().append('<option value="">Select Apartment</option>');
+
+                                if (towerId && floorId) {
+                                    const tower = towers.find(t => t.id == towerId);
+                                    if (tower && tower.floors) {
+                                        const floor = tower.floors.find(f => f.id == floorId);
+                                        if (floor && floor.apartments) {
+                                            floor.apartments.forEach(apartment => {
+                                                const selected = selectedApartmentId && apartment.id == selectedApartmentId ? 'selected' : '';
+                                                const option = `<option value="${apartment.id}" 
                             data-tenant-name="${apartment.tenant ? apartment.tenant.name : ''}"
                             data-rent-amount="${apartment.tenant ? apartment.tenant.rent_amount : ''}"
                             ${selected}>
                             ${apartment.apartment_number}
                         </option>`;
-                            apartmentSelect.append(option);
-                        });
-                    }
-                }
-            }
-        }
-<<<<<<< HEAD
-    }
-</script>
+                                                apartmentSelect.append(option);
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+        </script>
+        
+    @endpush
 @endsection
-=======
-    </script>
-@endpush
->>>>>>> 7a9f4f530062abf2f0d2264a8e2b20e7ececb910

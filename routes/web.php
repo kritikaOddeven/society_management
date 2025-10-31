@@ -14,6 +14,7 @@ use App\Http\Controllers\RentController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\BillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -87,4 +88,5 @@ Route::middleware('auth')->group(function () {
         
     });
 
+    Route::resource('bills', BillController::class);
 });

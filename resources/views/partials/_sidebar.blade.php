@@ -44,7 +44,7 @@
             <li class="dropdown {{ Request()->is(['bills*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Bills</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="">Maintenance</a></li>
+                    <li class="{{ Request()->is('bills') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.index') }}">Maintenance</a></li>
                 </ul>
             </li>
 
