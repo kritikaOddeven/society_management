@@ -70,6 +70,8 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <span>Selected parking code: {{ implode(', ', $parking_codes) }}</span>
+
                                             @error('parking_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -79,7 +81,7 @@
 
                                     <div class="col-md-1 mt-4 p-2">
                                         <div class="form-group">
-                                            <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addParkingModal"><i class="fas fa-plus"></i></button>
+                                            <a href="#!" class="btn btn-primary rounded" data-toggle="modal" data-target="#addParkingModal"><i class="fas fa-plus"></i></a>
                                         </div>
                                     </div>
 
@@ -160,6 +162,8 @@
             </div>
         </div>
     </section>
+    @include('apartments.parking.create', ['apartments' => $apartments])
+
     {{-- End main section --}}
 @endsection
 

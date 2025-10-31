@@ -54,27 +54,27 @@ class ApartmentController extends Controller
             'parking_id.*'     => 'exists:parkings,id',
             'status'           => 'nullable|in:Available,Occupied,Maintenance,Unsold',
         ], [
-            'tower_id.required' => 'Tower selection is required',
-            'tower_id.exists' => 'Selected tower is invalid',
-            'floor_id.required' => 'Floor selection is required',
-            'floor_id.exists' => 'Selected floor is invalid',
+            'tower_id.required'         => 'Tower selection is required',
+            'tower_id.exists'           => 'Selected tower is invalid',
+            'floor_id.required'         => 'Floor selection is required',
+            'floor_id.exists'           => 'Selected floor is invalid',
             'apartment_number.required' => 'Apartment number is required',
-            'apartment_number.unique' => 'This apartment number already exists',
-            'apartment_area.required' => 'Apartment area is required',
-            'apartment_area.numeric' => 'Apartment area must be a number',
-            'apartment_area.min' => 'Apartment area must be at least 1 sq ft',
-            'apartment_area.max' => 'Apartment area must not exceed 10,000 sq ft',
-            'apartment_type.required' => 'Apartment type selection is required',
-            'apartment_type.exists' => 'Selected apartment type is invalid',
-            'owner_id.exists' => 'Selected owner is invalid',
-            'parking_id.*.exists' => 'One or more selected parking spaces are invalid',
+            'apartment_number.unique'   => 'This apartment number already exists',
+            'apartment_area.required'   => 'Apartment area is required',
+            'apartment_area.numeric'    => 'Apartment area must be a number',
+            'apartment_area.min'        => 'Apartment area must be at least 1 sq ft',
+            'apartment_area.max'        => 'Apartment area must not exceed 10,000 sq ft',
+            'apartment_type.required'   => 'Apartment type selection is required',
+            'apartment_type.exists'     => 'Selected apartment type is invalid',
+            'owner_id.exists'           => 'Selected owner is invalid',
+            'parking_id.*.exists'       => 'One or more selected parking spaces are invalid',
         ]);
 
         if ($validator->fails()) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => $validator->errors()
+                    'errors'  => $validator->errors(),
                 ], 422);
             }
             return redirect()->back()->withErrors($validator)->withInput();
@@ -92,7 +92,7 @@ class ApartmentController extends Controller
         $apartment->save();
 
         // Loop through parking IDs and update their status
-        if($request->has('parking_id') && $request->parking_id){
+        if ($request->has('parking_id') && $request->parking_id) {
             foreach ($request->parking_id as $parkingId) {
                 Parking::where('id', $parkingId)->update(['status' => 'Occupied', 'apartment_id' => $apartment->id]);
             }
@@ -100,10 +100,10 @@ class ApartmentController extends Controller
 
         if ($request->ajax()) {
             return response()->json([
-                'success' => true,
-                'message' => 'Apartment created successfully.',
+                'success'   => true,
+                'message'   => 'Apartment created successfully.',
                 'apartment' => $apartment->load(['tower', 'floor', 'type']),
-                'redirect' => route('apartments.index')
+                'redirect'  => route('apartments.index'),
             ]);
         }
 
@@ -112,17 +112,25 @@ class ApartmentController extends Controller
 
     public function edit(Apartment $apartment)
     {
-        $towers   = Tower::with('floors')->orderBy('tower_name')->get();
-        $types    = ApartmentType::orderBy('apartment_type')->get();
-        $parkings = Parking::where('status', 'Available')->get();
-        $owners   = Owner::orderBy('name')->get();
-        return view('apartments.edit', compact('apartment', 'towers', 'types', 'parkings', 'owners'));
+        $towers        = Tower::with('floors')->orderBy('tower_name')->get();
+        $types         = ApartmentType::orderBy('apartment_type')->get();
+        $parkings      = Parking::where('status', 'Available')->get();
+        $owners        = Owner::orderBy('name')->get();
+        $parking_codes = $apartment->parking_id ? Parking::whereIn("id", json_decode($apartment->parking_id, true))->pluck('parking_code')->toArray() : [];
+        $apartments = $this->apartment
+            ->with(['tower', 'floor', 'type'])
+            ->latest()
+            ->get();
+        $floors = Floor::with('tower')->latest()->get();
+
+
+        return view('apartments.edit', compact('apartment', 'towers', 'types', 'parkings', 'owners', 'parking_codes', 'apartments', 'floors'));
     }
 
     public function update(Request $request, $id)
     {
         $apartment = Apartment::findOrFail($id);
-        
+
         $validator = \Validator::make($request->all(), [
             'tower_id'         => 'required|exists:towers,id',
             'floor_id'         => 'required|exists:floors,id',
@@ -134,42 +142,49 @@ class ApartmentController extends Controller
             'parking_id.*'     => 'exists:parkings,id',
             'status'           => 'nullable|in:Available,Occupied,Maintenance,Unsold','Rent', 'Rented',
         ], [
-            'tower_id.required' => 'Tower selection is required',
-            'tower_id.exists' => 'Selected tower is invalid',
-            'floor_id.required' => 'Floor selection is required',
-            'floor_id.exists' => 'Selected floor is invalid',
+            'tower_id.required'         => 'Tower selection is required',
+            'tower_id.exists'           => 'Selected tower is invalid',
+            'floor_id.required'         => 'Floor selection is required',
+            'floor_id.exists'           => 'Selected floor is invalid',
             'apartment_number.required' => 'Apartment number is required',
-            'apartment_number.unique' => 'This apartment number already exists',
-            'apartment_area.required' => 'Apartment area is required',
-            'apartment_area.numeric' => 'Apartment area must be a number',
-            'apartment_area.min' => 'Apartment area must be at least 1 sq ft',
-            'apartment_area.max' => 'Apartment area must not exceed 10,000 sq ft',
-            'apartment_type.required' => 'Apartment type selection is required',
-            'apartment_type.exists' => 'Selected apartment type is invalid',
-            'owner_id.exists' => 'Selected owner is invalid',
-            'parking_id.*.exists' => 'One or more selected parking spaces are invalid',
+            'apartment_number.unique'   => 'This apartment number already exists',
+            'apartment_area.required'   => 'Apartment area is required',
+            'apartment_area.numeric'    => 'Apartment area must be a number',
+            'apartment_area.min'        => 'Apartment area must be at least 1 sq ft',
+            'apartment_area.max'        => 'Apartment area must not exceed 10,000 sq ft',
+            'apartment_type.required'   => 'Apartment type selection is required',
+            'apartment_type.exists'     => 'Selected apartment type is invalid',
+            'owner_id.exists'           => 'Selected owner is invalid',
+            'parking_id.*.exists'       => 'One or more selected parking spaces are invalid',
         ]);
 
         if ($validator->fails()) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => $validator->errors()
+                    'errors'  => $validator->errors(),
                 ], 422);
             }
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        // Get existing parking IDs as array
+        $existingParking = $apartment->parking_id ? json_decode($apartment->parking_id, true) : [];
+        // Merge with new parking IDs from request
+        $newParking    = $request->parking_id ?? [];
+        $mergedParking = array_unique(array_merge($existingParking, $newParking)); // remove duplicates
+
 
         $apartment->tower_id         = $request->tower_id;
         $apartment->floor_id         = $request->floor_id;
         $apartment->apartment_number = $request->apartment_number;
         $apartment->apartment_area   = $request->apartment_area;
         $apartment->apartment_type   = $request->apartment_type;
-        $apartment->status           = $request->status ?: 'Available';
-        $apartment->parking_id       = $request->parking_id ? json_encode($request->parking_id) : '';
+        $apartment->status           = $request->status ?? 'Available';
+        $apartment->parking_id       = json_encode($mergedParking);
         $apartment->owner_id         = $request->owner_id;
         $apartment->save();
-        
+
         //  Update Owner table also
         if ($request->owner_id) {
             $owner = Owner::find($request->owner_id);
@@ -180,13 +195,19 @@ class ApartmentController extends Controller
                 $owner->save();
             }
         }
+        // Loop through parking IDs and update their status
+        if ($mergedParking) {
+            foreach ($mergedParking as $parkingId) {
+                Parking::where('id', $parkingId)->update(['status' => 'Occupied', 'apartment_id' => $apartment->id]);
+            }
+        }
 
         if ($request->ajax()) {
             return response()->json([
-                'success' => true,
-                'message' => 'Apartment updated successfully.',
+                'success'   => true,
+                'message'   => 'Apartment updated successfully.',
                 'apartment' => $apartment->load(['tower', 'floor', 'type']),
-                'redirect' => route('apartments.index')
+                'redirect'  => route('apartments.index'),
             ]);
         }
 
