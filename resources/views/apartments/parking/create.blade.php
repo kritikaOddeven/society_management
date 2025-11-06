@@ -38,14 +38,29 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="floor_id">Floor Name <span class="text-danger req-star">*</span></label>
-                                <select class="form-control" id="floor_id" name="floor_id">
+                                {{-- <select class="form-control" id="floor_id" name="floor_id">
                                     <option value="">Select Floor</option>
                                     @foreach ($floors as $floor)
                                         <option value="{{ $floor->id }}" {{ old('floor_id') == $floor->id ? 'selected' : '' }}>
                                             {{ ucfirst(str_replace('-', ' ', $floor->floor_name)) }}
                                         </option>
                                     @endforeach
-                                </select>
+                                </select> --}}
+                                <div class="form-group">
+    <label for="floor_id">Floor Name <span class="text-danger req-star">*</span></label>
+    <select class="form-control" id="floor_id" name="floor_id">
+        <option value="">Select Floor</option>
+        @foreach ($floors as $floor)
+            <option value="{{ $floor->id }}" {{ old('floor_id') == $floor->id ? 'selected' : '' }}>
+                {{-- Show Tower Name + Floor Name --}}
+                {{ $floor->tower ? $floor->tower->tower_name . ' - ' : '' }}
+                {{ ucfirst(str_replace('-', ' ', $floor->floor_name)) }}
+            </option>
+        @endforeach
+    </select>
+    <span class="text-danger floor_id-error"></span>
+</div>
+
                                 <span class="text-danger floor_id-error"></span>
                             </div>
                         </div>
