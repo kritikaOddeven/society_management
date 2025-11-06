@@ -12,7 +12,10 @@ class ParkingController extends Controller
     {
         $parkings   = Parking::with(['apartment', 'floor'])->latest()->paginate(10);
         $apartments = Apartment::orderBy('apartment_number')->get();
-        $floors     = Floor::orderBy('floor_name')->get();
+        // $floors     = Floor::orderBy('floor_name')->get();
+            $floors = Floor::whereIn('floor_name', ['Ground Floor', 'Basement Parking'])
+                   ->orderByRaw("FIELD(floor_name, 'Ground Floor', 'Basement Parking')")
+                   ->get();
         return view('apartments.parking.index', compact('parkings', 'apartments', 'floors'));
     }
 
