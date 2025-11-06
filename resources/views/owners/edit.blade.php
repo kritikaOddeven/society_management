@@ -116,6 +116,7 @@
                                             <select class="form-control @error('apartment_id') is-invalid @enderror" id="apartment_id" name="apartment_id">
                                                 <option value="">Select Apartment</option>
                                             </select>
+                                             <span>Selected Apartment : </span>
                                         </div>
                                     </div>
                                 </div>

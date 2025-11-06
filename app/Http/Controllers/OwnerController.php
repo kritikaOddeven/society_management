@@ -154,8 +154,8 @@ class OwnerController extends Controller
                     $apartment->save();
                 }
             }
-            return redirect()->route('owners.index')->with('success', 'Owner updated successfully.');
         }
+        return redirect('owners')->with('success', 'Owner updated successfully.');
     }
 
     public function destroy($id)
