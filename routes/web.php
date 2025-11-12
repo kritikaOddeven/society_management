@@ -16,6 +16,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BillTypeController;
+use App\Http\Controllers\UtilityBillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -89,10 +90,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('bill_types', BillTypeController::class);
         
     });
-  Route::prefix('bills')->as('bills.')->group(function () {
-        Route::get('utility', [BillController::class, 'utilityIndex'])->name('utility.index');
-        Route::get('utility_create', [BillController::class, 'utilityCreate'])->name('utility.create');
-        Route::get('utility_store', [BillController::class, 'utilityStore'])->name('utility.store');
+    Route::prefix('bills')->as('bills.')->group(function () {
+        Route::resource('utility', UtilityBillController::class)->except(['destroy']);
         Route::get('maintenance', [BillController::class, 'maintenanceIndex'])->name('maintenance.index');
       });
 });

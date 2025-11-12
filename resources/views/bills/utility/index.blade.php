@@ -58,7 +58,46 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        @foreach ($utilityBills as $utilityBill)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    {{ optional($utilityBill->apartment)->apartment_number }}
+                                                    @if ($utilityBill->apartment && ($utilityBill->apartment->floor || $utilityBill->apartment->tower))
+                                                        <br>
+                                                        <small class="text-muted">
+                                                            {{ optional($utilityBill->apartment->floor)->floor_name }}
+                                                            {{ $utilityBill->apartment->floor && $utilityBill->apartment->tower ? ' - ' : '' }}
+                                                            {{ optional($utilityBill->apartment->tower)->tower_name }}
+                                                        </small>
+                                                    @endif
+                                                </td>
+                                                <td>{{ optional($utilityBill->billType)->bill_type }}</td>
+                                                <td>{{ optional($utilityBill->bill_date)->format('d M Y') }}</td>
+                                                <td>{{ number_format($utilityBill->bill_amount, 2) }}</td>
+                                                <td>
+                                                    <span class="badge badge-{{ $utilityBill->status === 'Paid' ? 'success' : 'warning' }}">
+                                                        {{ $utilityBill->status }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ optional($utilityBill->bill_due_date)->format('d M Y') }}</td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <a href="{{ route('bills.utility.show', $utilityBill) }}" class="btn btn-sm btn-info mr-2">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ route('bills.utility.edit', $utilityBill) }}" class="btn btn-sm btn-primary mr-2">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        @if ($utilityBill->bill_image)
+                                                            <a href="{{ asset($utilityBill->bill_image) }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                                <i class="fas fa-file-download"></i>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

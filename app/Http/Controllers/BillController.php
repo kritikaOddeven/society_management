@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Rent;
-use App\Models\Apartment;
 
 
 class BillController extends Controller
@@ -14,16 +13,4 @@ class BillController extends Controller
 
     }
 
-    public function utilityIndex(){
-        return view('bills.utility.index');
-    }
-
-     public function utilityCreate(){
-        $apartments = Apartment::orderBy('apartment_number')->get();
-        return view('bills.utility.create', compact('apartments'));
-    }
-
-    public function utilityStore(){
-       
-    }
 }
