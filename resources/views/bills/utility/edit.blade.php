@@ -92,7 +92,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="bill_date">Bill Date <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control flatpickr flatpickr-date @error('bill_date') is-invalid @enderror" id="bill_date" name="bill_date" value="{{ old('bill_date', optional($utility->bill_date)->format('Y-m-d')) }}" placeholder="Bill date">
+                                            <input type="text" class="form-control flatpickr @error('bill_date') is-invalid @enderror" id="datepicker" name="bill_date" value="{{ old('bill_date', optional($utility->bill_date)->format('Y-m-d')) }}" placeholder="Bill date">
                                             @error('bill_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -103,7 +103,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="bill_due_date">Bill Due Date <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control flatpickr flatpickr-date @error('bill_due_date') is-invalid @enderror" id="bill_due_date" name="bill_due_date" value="{{ old('bill_due_date', optional($utility->bill_due_date)->format('Y-m-d')) }}" placeholder="Bill due date">
+                                            <input type="text" class="form-control flatpickr @error('bill_due_date') is-invalid @enderror" id="datepicker" name="bill_due_date" value="{{ old('bill_due_date', optional($utility->bill_due_date)->format('Y-m-d')) }}" placeholder="Bill due date">
                                             @error('bill_due_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -156,15 +156,5 @@
         </div>
     </section>
     {{-- End main section --}}
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            if (typeof flatpickr !== 'undefined') {
-                flatpickr('#bill_date', { dateFormat: 'Y-m-d' });
-                flatpickr('#bill_due_date', { dateFormat: 'Y-m-d' });
-            }
-        });
-    </script>
-@endpush
 
 @endsection

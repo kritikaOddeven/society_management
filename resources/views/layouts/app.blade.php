@@ -463,7 +463,7 @@
             dateFormat: 'Y-m-d',
             altInput: true,
             altFormat: 'F j, Y',
-            maxDate: 'today'
+            // maxDate: 'today'
         });
         </script>
 

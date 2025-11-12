@@ -19,7 +19,7 @@
                             <h4>Utility Bill Information</h4>
                             <div>
                                 <a href="{{ route('bills.utility.edit', $utility) }}" class="btn btn-primary mr-2">
-                                    <i class="fas fa-edit"></i> Edit
+                                    <i class="fas fa-edit"></i>Edit
                                 </a>
                                 <a href="{{ route('bills.utility.index') }}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left"></i> Back to List
