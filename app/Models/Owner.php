@@ -14,6 +14,7 @@ class Owner extends Model
         'tower_id',
         'floor_id',
         'apartment_id',
+        'parking_id',
         'status',
     ];
 
@@ -35,5 +36,10 @@ class Owner extends Model
     public function apartment()
     {
         return $this->belongsTo(Apartment::class);
+    }
+
+    public function parking()
+    {
+        return $this->belongsTo(Parking::class);
     }
 }

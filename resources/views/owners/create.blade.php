@@ -113,6 +113,23 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="parking_id">Assign Parking</label>
+                                            <select class="form-control @error('parking_id') is-invalid @enderror" id="parking_id" name="parking_id">
+                                                <option value="">Select Parking</option>
+                                                @foreach ($parkings as $parking)
+                                                    <option value="{{ $parking->id }}" {{ old('parking_id') == $parking->id ? 'selected' : '' }}>
+                                                        {{ $parking->parking_code }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('parking_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
 
                                 </div>
 
