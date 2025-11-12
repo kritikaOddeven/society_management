@@ -41,10 +41,11 @@
                 </ul>
             </li>
 
-            <li class="dropdown {{ Request()->is(['bills*']) ? 'active' : '' }}">
+            <li class="dropdown {{ Request()->is(['bills*', 'maintenance*', 'utility']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Bills</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request()->is('bills') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.index') }}">Maintenance</a></li>
+                    <li class="{{ Request()->is('utility') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.utility.index') }}">Utility Bills</a></li>
+                    <li class="{{ Request()->is('maintenance') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.maintenance.index') }}">Maintenance</a></li>
                 </ul>
             </li>
 
@@ -64,11 +65,12 @@
                 </ul>
             </li>
 
-            <li class="dropdown {{ Request()->is(['settings*', 'types*', 'maintenance*', 'service_types*']) ? 'active' : '' }}">
+            <li class="dropdown {{ Request()->is(['settings*', 'types*', 'maintenance*', 'service_types*', 'bill_types*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i> <span>Settings</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{ Request()->is('types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.types.index') }}">Apartment Type</a></li>
                     <li class="{{ Request()->is('service_types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.service_types.index') }}">Service Type</a></li>
+                    <li class="{{ Request()->is('bill_types') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.bill_types.index') }}">Bill Type</a></li>
                     <li class="{{ Request()->is('maintenance') ? 'active' : '' }}"><a class="nav-link" href="{{ route('settings.maintenance.index') }}">Maintenance</a></li>
                 </ul>
             </li>

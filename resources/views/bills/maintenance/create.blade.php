@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('bills.store') }}" method="POST" id="addBillForm">
+            <form action="#" method="POST" id="addBillForm">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
