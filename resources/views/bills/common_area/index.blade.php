@@ -75,7 +75,7 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                         <a href="{{ route('bills.common_area.edit', $bill) }}" class="btn btn-sm btn-primary mr-2">
-                                                            <i class="fas fa-edit"></i>
+                                                            <i class="fas fa-pencil-alt"></i>
                                                         </a>
                                                         @if ($bill->bill_image)
                                                             <a href="{{ asset($bill->bill_image) }}" target="_blank" class="btn btn-sm btn-secondary">

@@ -87,7 +87,7 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                         <a href="{{ route('bills.utility.edit', $utilityBill) }}" class="btn btn-sm btn-primary mr-2">
-                                                            <i class="fas fa-edit"></i>
+                                                            <i class="fas fa-pencil-alt"></i>
                                                         </a>
                                                         @if ($utilityBill->bill_image)
                                                             <a href="{{ asset($utilityBill->bill_image) }}" target="_blank" class="btn btn-sm btn-secondary">
@@ -95,7 +95,7 @@
                                                             </a>
                                                         @endif
 
-                                                        
+
                                                     </div>
                                                 </td>
                                             </tr>
