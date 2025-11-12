@@ -57,7 +57,7 @@
                 </ul>
             </li>
 
-            <li class="{{ Request()->is('owners*') ? 'active' : '' }}"><a class="nav-link" href="blank.html"><i class="fas fa-calendar"></i> <span>Events</span></a></li>
+            <li class="{{ Request()->is('events*') ? 'active' : '' }}"><a class="nav-link" href="blank.html"><i class="fas fa-calendar"></i> <span>Events</span></a></li>
 
             <li class="dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Report</span></a>

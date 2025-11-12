@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Apartment;
+use App\Models\Owner;
 use App\Models\Tenant;
 use App\Models\TenantHistory;
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ class TenantController extends Controller
     {
         // $apartments = Apartment::where('status', 'Rent')->get();
         $apartments = Apartment::whereIn('status', ['Rent', 'Unsold'])->get();
-        return view('tenants.create', compact('apartments'));
+        $owners = Owner::orderBy('name')->get();
+        return view('tenants.create', compact('apartments', 'owners'));
     }
 
     public function store(Request $request)
@@ -46,7 +48,7 @@ class TenantController extends Controller
         $tenant->rent_amount         = $request->rent_amount;
         $tenant->contract_start_date = $request->contract_start_date;
         $tenant->contract_end_date   = $request->contract_end_date;
-
+        $tenant->owner_id            = $request->owner_id;
         // Handle profile image upload (save in public/profile_images)
         if ($request->hasFile('profile_image')) {
             $file     = $request->file('profile_image');
@@ -75,11 +77,12 @@ class TenantController extends Controller
 
     public function edit($id)
     {
-        $tenant = Tenant::findOrFail($id);
+        $tenant = Tenant::with('apartment')->findOrFail($id);
         $apartments = Apartment::where('status', 'Rent')
             ->orWhere('id', $tenant->apartment_id)
             ->get();
-        return view('tenants.edit', compact('tenant', 'apartments'));
+        $owners = Owner::orderBy('name')->get();
+        return view('tenants.edit', compact('tenant', 'apartments', 'owners'));
     }
 
     public function update(Request $request, $id)
@@ -104,6 +107,7 @@ class TenantController extends Controller
         $tenant->name                = $request->name;
         $tenant->email               = $request->email;
         $tenant->phone_number        = $request->phone_number;
+        $tenant->owner_id            = $request->owner_id;
 
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {

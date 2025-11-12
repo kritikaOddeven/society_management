@@ -23,7 +23,24 @@
                                 @csrf
                                 <div class="row">
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="owner_id">Select Owner</label>
+                                            <select class="form-control @error('owner_id') is-invalid @enderror" id="owner_id" name="owner_id">
+                                                <option value="">Select Owner</option>
+                                                @foreach ($owners as $owner)
+                                                    <option value="{{ $owner->id }}" {{ old('owner_id') == $owner->id ? 'selected' : '' }}>
+                                                        {{ $owner->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('owner_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="name">Full Name <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
@@ -33,7 +50,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="email">Email Address </label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
