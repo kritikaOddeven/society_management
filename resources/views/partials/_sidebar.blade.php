@@ -45,6 +45,7 @@
                 <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Bills</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{ Request()->is('utility') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.utility.index') }}">Utility Bills</a></li>
+                    <li class="{{ Request()->is('common_area') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.common_area.index') }}">Common Area Bills</a></li>
                     <li class="{{ Request()->is('maintenance') ? 'active' : '' }}"><a class="nav-link" href="{{ route('bills.maintenance.index') }}">Maintenance</a></li>
                 </ul>
             </li>

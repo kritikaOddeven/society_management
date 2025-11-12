@@ -17,6 +17,7 @@ use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BillTypeController;
 use App\Http\Controllers\UtilityBillController;
+use App\Http\Controllers\CommonAreaBillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -92,6 +93,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('bills')->as('bills.')->group(function () {
         Route::resource('utility', UtilityBillController::class)->except(['destroy']);
+        Route::resource('common_area', CommonAreaBillController::class)->except(['destroy']);
         Route::get('maintenance', [BillController::class, 'maintenanceIndex'])->name('maintenance.index');
       });
 });
