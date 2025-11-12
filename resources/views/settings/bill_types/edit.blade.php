@@ -24,8 +24,8 @@
                             <div class="form-group">
                                 <label for="type_category">Bill Type Category <span class="text-danger">*</span></label>
                                 <select class="form-control @error('type_category') is-invalid @enderror" id="type_category" name="type_category">
-                                    <option value="utility_bill" {{ old('type_category') == 'utility_bill' ? 'selected' : '' }}>Utility Bills Type</option>
-                                    <option value="common_bill" {{ old('type_category') == 'common_bill' ? 'selected' : '' }}>Common Bills Type</option>
+                                    <option value="utility_bill" {{ old('type_category', $type->type_category) == 'utility_bill' ? 'selected' : '' }}>Utility Bills Type</option>
+                                    <option value="common_bill" {{ old('type_category', $type->type_category) == 'common_bill' ? 'selected' : '' }}>Common Bills Type</option>
                                 </select>
                                 @error('type_category')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -36,8 +36,8 @@
                             <div class="form-group">
                                 <label for="bill_status">Bill Status</label>
                                 <select class="form-control @error('status') is-invalid @enderror" id="bill_status" name="status">
-                                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                                    <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                    <option value="active" {{ old('status', $type->status) == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="inactive" {{ old('status', $type->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                 </select>
                                 @error('status')
                                     <div class="invalid-feedback">{{ $message }}</div>

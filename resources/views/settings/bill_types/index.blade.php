@@ -58,13 +58,13 @@
                                         @foreach ($types as $key => $type)
                                             <tr>
                                                 <td>{{ ++$key }}</td>
-                                                <td> {{ $type->bill_type }}</td>
-                                                <td>{{ $type->type_category }}</td>
+                                                <td> {{ $type->bill_type  }}</td>
+                                                <td>{{ $type->type_category == 'utility_bill' ? 'Utility Bills Type' : 'Common Bills Type' }}</td>
                                                  <td>
                                                     @if ($type->status === 'active')
                                                         <span class="badge bg-success">Active</span>
                                                     @else
-                                                        <span class="badge bg-danger">Inactive</span>
+                                                        <span class="badge bg-danger text-white">Inactive</span>
                                                     @endif
                                                 </td>
                                                 <td>
