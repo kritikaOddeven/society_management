@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
@@ -123,6 +124,7 @@
     <script src="{{ asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
 
     <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
     <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
 
     <script src="{{ asset('assets/modules/cleave-js/dist/cleave.min.js') }}"></script>

@@ -11,7 +11,7 @@ class OwnerController extends Controller
 {
     public function index()
     {
-        $owners = Owner::with(['tower', 'floor', 'apartment', 'parking'])->latest()->get();
+        $owners = Owner::with(['tower', 'floor', 'apartments', 'parking'])->latest()->get();
         return view('owners.index', compact('owners'));
     }
 
@@ -34,15 +34,29 @@ class OwnerController extends Controller
             'email'        => 'nullable',
             'tower_id'     => 'nullable',
             'floor_id'     => 'nullable',
-            'apartment_id' => 'nullable',
+            'apartment_ids' => 'nullable|array',
+            'apartment_ids.*' => 'exists:apartments,id',
             'parking_id'   => 'nullable|exists:parkings,id',
         ]);
         // dd($request->all());
 
+        $apartmentIds = collect($request->input('apartment_ids', []))
+            ->filter()
+            ->map(static function ($id) {
+                return (int) $id;
+            })
+            ->unique()
+            ->values();
+
+        $primaryApartment = null;
+        if ($apartmentIds->isNotEmpty()) {
+            $primaryApartment = Apartment::find($apartmentIds->first());
+        }
+
         $owner               = new Owner();
-        $owner->tower_id     = $request->tower_id;
-        $owner->floor_id     = $request->floor_id;
-        $owner->apartment_id = $request->apartment_id;
+        $owner->tower_id     = $primaryApartment->tower_id ?? $request->tower_id;
+        $owner->floor_id     = $primaryApartment->floor_id ?? $request->floor_id;
+        $owner->apartment_id = $primaryApartment->id ?? null;
         $owner->name         = $request->name;
         $owner->email        = $request->email;
         $owner->phone_number = $request->phone_number;
@@ -61,13 +75,11 @@ class OwnerController extends Controller
         $owner->save();
 
         // Update apartment status using model
-        if ($request->apartment_id) {
-            $apartment = Apartment::find($request->apartment_id);
-            if ($apartment) {
-                $apartment->status = 'Occupied';
-                $apartment->owner_id = $owner->id;
-                $apartment->save();
-            }
+        if ($apartmentIds->isNotEmpty()) {
+            Apartment::whereIn('id', $apartmentIds)->update([
+                'status'   => 'Occupied',
+                'owner_id' => $owner->id,
+            ]);
         }
 
         if ($request->parking_id) {
@@ -95,11 +107,14 @@ class OwnerController extends Controller
 
     public function edit($id)
     {
-        $owner = Owner::findOrFail($id);
+        $owner = Owner::with('apartments')->findOrFail($id);
 
-        // Load towers with floors and apartments (only unsold apartments)
-        $towers = Tower::with(['floors.apartments' => function ($q) {
-            $q->where('status', 'Unsold');
+        // Load towers with floors and apartments (only unsold apartments plus owner's current apartments)
+        $towers = Tower::with(['floors.apartments' => function ($q) use ($owner) {
+            $q->where(function ($query) use ($owner) {
+                $query->where('status', 'Unsold')
+                    ->orWhere('owner_id', $owner->id);
+            });
         }])->get();
         $parkings = Parking::where('status', 'Available')
             ->when($owner->parking_id, function ($query) use ($owner) {
@@ -120,20 +135,34 @@ class OwnerController extends Controller
             'email'        => 'nullable',
             'tower_id'     => 'nullable',
             'floor_id'     => 'nullable',
-            'apartment_id' => 'nullable',
+            'apartment_ids' => 'nullable|array',
+            'apartment_ids.*' => 'exists:apartments,id',
             'parking_id'   => 'nullable|exists:parkings,id',
         ]);
 
-        $owner = Owner::findOrFail($id);
+        $owner = Owner::with('apartments')->findOrFail($id);
 
-        // Save previous apartment_id to revert its status if changed
-        $oldApartmentId = $owner->apartment_id;
+        // Save previous apartment assignments to revert their status if changed
+        $existingApartmentIds = Apartment::where('owner_id', $owner->id)->pluck('id');
         $oldParkingId   = $owner->parking_id;
         $previousImage  = $owner->profile_image;
 
-        $owner->tower_id     = $request->tower_id;
-        $owner->floor_id     = $request->floor_id;
-        $owner->apartment_id = $request->apartment_id;
+        $apartmentIds = collect($request->input('apartment_ids', []))
+            ->filter()
+            ->map(static function ($id) {
+                return (int) $id;
+            })
+            ->unique()
+            ->values();
+
+        $primaryApartment = null;
+        if ($apartmentIds->isNotEmpty()) {
+            $primaryApartment = Apartment::find($apartmentIds->first());
+        }
+
+        $owner->tower_id     = $primaryApartment->tower_id ?? $request->tower_id;
+        $owner->floor_id     = $primaryApartment->floor_id ?? $request->floor_id;
+        $owner->apartment_id = $primaryApartment->id ?? null;
         $owner->name         = $request->name;
         $owner->email        = $request->email;
         $owner->phone_number = $request->phone_number;
@@ -158,24 +187,20 @@ class OwnerController extends Controller
 
         $owner->save();
 
-        // Revert old apartment to 'Unsold' if changed
-        if ($oldApartmentId && $oldApartmentId != $owner->apartment_id) {
-            $oldApartment = Apartment::find($oldApartmentId);
-            if ($oldApartment) {
-                $oldApartment->status   = 'Unsold';
-                $oldApartment->owner_id = null;
-                $oldApartment->save();
-            }
+        $idsToDetach = $existingApartmentIds->diff($apartmentIds);
+
+        if ($idsToDetach->isNotEmpty()) {
+            Apartment::whereIn('id', $idsToDetach)->update([
+                'status'   => 'Unsold',
+                'owner_id' => null,
+            ]);
         }
 
-        // Update new apartment to 'Occupied'
-        if ($owner->apartment_id) {
-            $apartment = Apartment::find($owner->apartment_id);
-            if ($apartment) {
-                $apartment->status   = 'Occupied';
-                $apartment->owner_id = $owner->id;
-                $apartment->save();
-            }
+        if ($apartmentIds->isNotEmpty()) {
+            Apartment::whereIn('id', $apartmentIds)->update([
+                'status'   => 'Occupied',
+                'owner_id' => $owner->id,
+            ]);
         }
 
         // Revert previous parking slot if changed

@@ -90,7 +90,15 @@
                                                         <span class="badge badge-danger">Inactive</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $owner->apartment->apartment_number ?? '-'}}</td>
+                                                <td>
+                                                    @if($owner->apartments && $owner->apartments->count() > 0)
+                                                        @foreach($owner->apartments as $apartment)
+                                                            <span class="badge badge-primary mr-1">{{ $apartment->apartment_number }}</span>
+                                                        @endforeach
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
 
                                                 <td>
                                                     <div class="btn-group" role="group">

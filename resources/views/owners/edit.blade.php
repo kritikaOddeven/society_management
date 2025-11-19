@@ -112,11 +112,14 @@
 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="apartment_id">Select Apartment</label>
-                                            <select class="form-control @error('apartment_id') is-invalid @enderror" id="apartment_id" name="apartment_id">
-                                                <option value="">Select Apartment</option>
+                                            <label for="apartment_id">Select Apartment(s)</label>
+                                            <select class="form-control @error('apartment_ids') is-invalid @enderror" id="apartment_id" name="apartment_ids[]" multiple>
                                             </select>
-                                             <span>Selected Apartment : </span>
+                                            <div id="selected-apartments-display" class="mt-2"></div>
+                                            <small class="form-text text-muted">Select apartments from the dropdown. Selected apartments will appear below.</small>
+                                            @error('apartment_ids')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
@@ -155,57 +158,177 @@
     <script>
         let towers = @json($towers);
         let selectedFloorId = {{ old('floor_id', $owner->floor_id ?? 'null') }};
-        let selectedApartmentId = {{ old('apartment_id', $owner->apartment_id ?? 'null') }};
+        let preselectedApartmentIds = @json(array_map('strval', (array) old('apartment_ids', $owner->apartments->pluck('id')->toArray())));
+
+        let apartmentChoicesInstance = null;
+        let apartmentChoiceCache = [];
+
+        function populateFloors(towerId, floorId = null) {
+            $('#floor_id').empty().append('<option value="">Select Floor</option>');
+
+            if (towerId) {
+                let selectedTower = towers.find(t => t.id == towerId);
+                if (selectedTower && selectedTower.floors) {
+                    selectedTower.floors.forEach(floor => {
+                        let selected = floorId != null && String(floorId) === String(floor.id) ? 'selected' : '';
+                        $('#floor_id').append(`<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`);
+                    });
+                }
+            }
+        }
+
+        function buildApartmentChoiceCache() {
+            apartmentChoiceCache = [];
+
+            towers.forEach(tower => {
+                if (!tower.floors) return;
+                tower.floors.forEach(floor => {
+                    if (!floor.apartments) return;
+
+                    floor.apartments.forEach(apartment => {
+                        apartmentChoiceCache.push({
+                            value: String(apartment.id),
+                            label: `${tower.tower_name.toUpperCase()} • ${floor.floor_name} • ${apartment.apartment_number}`,
+                            customProperties: {
+                                towerId: String(tower.id),
+                                floorId: String(floor.id),
+                            },
+                        });
+                    });
+                });
+            });
+        }
+
+        let selectedApartments = new Map();
+
+        function updateSelectedApartmentsDisplay() {
+            const displayContainer = $('#selected-apartments-display');
+            displayContainer.empty();
+
+            if (selectedApartments.size === 0) {
+                return;
+            }
+
+            selectedApartments.forEach((label, id) => {
+                const badge = $(`
+                    <span class="badge badge-primary mr-2 mb-2" style="font-size: 0.9rem; padding: 0.5rem 0.75rem; cursor: pointer;" data-apartment-id="${id}">
+                        ${label} <i class="fas fa-times ml-1"></i>
+                    </span>
+                `);
+                
+                badge.find('i').on('click', function(e) {
+                    e.stopPropagation();
+                    removeApartment(id);
+                });
+                
+                displayContainer.append(badge);
+            });
+        }
+
+        function removeApartment(apartmentId) {
+            selectedApartments.delete(String(apartmentId));
+            updateSelectedApartmentsDisplay();
+            syncApartmentChoices();
+        }
+
+        function addApartment(apartmentId, label) {
+            selectedApartments.set(String(apartmentId), label);
+            updateSelectedApartmentsDisplay();
+            syncApartmentChoices();
+        }
+
+        function syncApartmentChoices(forceValues = null) {
+            if (!apartmentChoicesInstance) {
+                return;
+            }
+
+            const selectedTowerId = $('#tower_id').val();
+            const selectedFloorId = $('#floor_id').val();
+            const currentSelected = Array.from(selectedApartments.keys());
+
+            // Filter out already selected apartments from available choices
+            const filteredChoices = apartmentChoiceCache.filter(choice => {
+                const matchesTower = !selectedTowerId || choice.customProperties.towerId === String(selectedTowerId);
+                const matchesFloor = !selectedFloorId || choice.customProperties.floorId === String(selectedFloorId);
+                const notSelected = !currentSelected.includes(choice.value);
+                return matchesTower && matchesFloor && notSelected;
+            });
+
+            apartmentChoicesInstance.clearChoices();
+            apartmentChoicesInstance.setChoices(filteredChoices, 'value', 'label', true);
+        }
 
         $(document).ready(function() {
-            function populateFloors(towerId, floorId = null) {
-                $('#floor_id').empty().append('<option value="">Select Floor</option>');
-                $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
+            buildApartmentChoiceCache();
 
-                if (towerId) {
-                    let selectedTower = towers.find(t => t.id == towerId);
-                    if (selectedTower && selectedTower.floors) {
-                        selectedTower.floors.forEach(floor => {
-                            let selected = floorId == floor.id ? 'selected' : '';
-                            $('#floor_id').append(`<option value="${floor.id}" ${selected}>${floor.floor_name}</option>`);
-                        });
-                    }
+            // Initialize preselected apartments
+            preselectedApartmentIds.forEach(aptId => {
+                const apt = apartmentChoiceCache.find(c => c.value === String(aptId));
+                if (apt) {
+                    selectedApartments.set(String(aptId), apt.label);
                 }
-            }
+            });
+            updateSelectedApartmentsDisplay();
 
-            function populateApartments(towerId, floorId, apartmentId = null) {
-                $('#apartment_id').empty().append('<option value="">Select Apartment</option>');
-                if (towerId && floorId) {
-                    let selectedTower = towers.find(t => t.id == towerId);
-                    if (selectedTower && selectedTower.floors) {
-                        let selectedFloor = selectedTower.floors.find(f => f.id == floorId);
-                        if (selectedFloor && selectedFloor.apartments) {
-                            selectedFloor.apartments.forEach(apartment => {
-                                let selected = apartmentId == apartment.id ? 'selected' : '';
-                                $('#apartment_id').append(`<option value="${apartment.id}" ${selected}>${apartment.apartment_number}</option>`);
-                            });
+            const apartmentSelectElement = document.getElementById('apartment_id');
+            if (apartmentSelectElement) {
+                apartmentChoicesInstance = new Choices(apartmentSelectElement, {
+                    removeItemButton: false,
+                    placeholder: true,
+                    placeholderValue: 'Select Apartment(s)',
+                    searchPlaceholderValue: 'Search apartment',
+                    shouldSort: false,
+                });
+
+                // Handle when an apartment is selected - listen to the underlying select change
+                $(apartmentSelectElement).on('change', function() {
+                    const selectedValues = $(this).val() || [];
+                    const newlySelected = selectedValues.filter(val => !selectedApartments.has(String(val)));
+                    
+                    newlySelected.forEach(aptId => {
+                        const apt = apartmentChoiceCache.find(c => c.value === String(aptId));
+                        if (apt) {
+                            addApartment(apt.value, apt.label);
                         }
-                    }
-                }
+                    });
+                    
+                    // Clear the select and refresh choices
+                    $(this).val(null);
+                    syncApartmentChoices();
+                });
             }
 
-            // Populate on tower change
-            $('#tower_id').on('change', function() {
-                populateFloors($(this).val());
-            });
-
-            // Populate on floor change
-            $('#floor_id').on('change', function() {
-                populateApartments($('#tower_id').val(), $(this).val());
-            });
-
-            // Prepopulate on page load for edit
             if ($('#tower_id').val()) {
                 populateFloors($('#tower_id').val(), selectedFloorId);
-                if (selectedFloorId) {
-                    populateApartments($('#tower_id').val(), selectedFloorId, selectedApartmentId);
-                }
             }
+
+            syncApartmentChoices();
+
+            $('#tower_id').on('change', function() {
+                populateFloors($(this).val());
+                $('#floor_id').val('');
+                syncApartmentChoices();
+            });
+
+            $('#floor_id').on('change', function() {
+                syncApartmentChoices();
+            });
+
+            // Before form submit, set values for selected apartments
+            $('form').on('submit', function(e) {
+                // Destroy Choices.js instance to access the native select
+                if (apartmentChoicesInstance) {
+                    apartmentChoicesInstance.destroy();
+                }
+                
+                // Clear and populate the select with selected apartments
+                const apartmentInput = $('#apartment_id');
+                apartmentInput.empty();
+                
+                selectedApartments.forEach((label, id) => {
+                    apartmentInput.append(`<option value="${id}" selected>${label}</option>`);
+                });
+            });
         });
 
         // File input label
