@@ -202,7 +202,7 @@
                     floor.apartments.forEach(apartment => {
                         apartmentChoiceCache.push({
                             value: String(apartment.id),
-                            label: `${tower.tower_name.toUpperCase()} • ${floor.floor_name} • ${apartment.apartment_number}`,
+                            label: `${apartment.apartment_number}`,
                             customProperties: {
                                 towerId: String(tower.id),
                                 floorId: String(floor.id),

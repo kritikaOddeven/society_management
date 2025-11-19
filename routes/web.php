@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
     })->name('logout');
 
     Route::resource('owners', OwnerController::class);
+    Route::post('owners/family', [OwnerController::class, 'familyMemberStore'])->name('owners.family.store');
 
     Route::resource('towers', TowerController::class);
     Route::resource('floors', FloorController::class);

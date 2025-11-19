@@ -78,7 +78,14 @@
                                                 <span>Apartment Number </span>
                                             </div>
                                             <div class="col-md-8">
-                                                <p> {{ $owner->apartment->apartment_number ?? '-' }}</p>
+                                                <p>   @if($owner->apartments && $owner->apartments->count() > 0)
+                                                        @foreach($owner->apartments as $apartment)
+                                                            <span>{{ $apartment->apartment_number }}</span>
+                                                            @if(!$loop->last),@endif
+                                                        @endforeach
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif</p>
                                             </div>
 
                                             <div class="col-md-4">
@@ -104,8 +111,6 @@
 
                                                 <p>{{ !empty($parkingCodes) ? implode(', ', $parkingCodes) : '-' }}</p>
 
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -121,14 +126,14 @@
                                             <a class="nav-link active" id="apartment-tab" data-toggle="tab" href="#apartment" role="tab" aria-controls="apartment" aria-selected="true">Apartment</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tenant</a>
+                                            <a class="nav-link" id="tenat-tab" data-toggle="tab" href="#tenat" role="tab" aria-controls="tenat" aria-selected="false">Tenant</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Family Member</a>
+                                            <a class="nav-link" id="family-tab" data-toggle="tab" href="#family" role="tab" aria-controls="family" aria-selected="false">Family Member</a>
                                         </li>
 
                                         <li class="nav-item">
-                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Owner Documents</a>
+                                            <a class="nav-link" id="document-tab" data-toggle="tab" href="#document" role="tab" aria-controls="document" aria-selected="false">Owner Documents</a>
                                         </li>
                                     </ul>
 
@@ -162,12 +167,140 @@
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                            Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui. Aliquam convallis neque eget tellus efficitur, eget maximus massa imperdiet. Morbi a mattis velit. Donec hendrerit venenatis justo, eget scelerisque tellus pharetra a.
+                                        <div class="tab-pane fade" id="tenat" role="tabpanel" aria-labelledby="tenat-tab">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped" id="table-1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S.No</th>
+                                                            <th>Name</th>
+                                                            <th>Email</th>
+                                                            <th>Phone</th>
+                                                            <th>Status</th>
+                                                            <th>Apartment Number</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{-- @foreach ($owner->apartments as $key => $apartment)
+                                                            <tr>
+                                                                <td>{{ ++$key }}</td>
+                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
+                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
+                                                                <td>{{ $apartment->apartment_type ?? '-' }}</td>
+                                                                <td>{{ $apartment->tower->tower_name ?? '-' }}</td>
+                                                                <td>{{ $apartment->floor->floor_name ?? '-' }}</td>
+                                                            </tr>
+                                                        @endforeach --}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
 
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                            Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor. Nam malesuada orci non ornare vulputate. Ut ut sollicitudin magna. Vestibulum eget ligula ut ipsum venenatis ultrices. Proin bibendum bibendum augue ut luctus.
+                                        <div class="tab-pane fade" id="family" role="tabpanel" aria-labelledby="family-tab">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <form action="{{ route('owners.family.store') }}" method="POST">
+                                                        @csrf
+                                                        <div class="row align-items-end">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="member">Add Family Member <span class="text-danger">*</span></label>
+                                                                    <input type="text" class="form-control @error('member') is-invalid @enderror" id="member" name="member" value="{{ old('member') }}">
+                                                                    @error('member')
+                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-2 d-flex justify-content-start">
+                                                                <button type="submit" class="btn btn-primary w-50" style="margin-top: 30px;">Add</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped" id="table-1">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No</th>
+                                                                    <th>Family Member Name</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {{-- @foreach ($owner->apartments as $key => $apartment)
+                                                            <tr>
+                                                                <td>{{ ++$key }}</td>
+                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
+                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
+                                                            </tr>
+                                                        @endforeach --}}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="document" role="tabpanel" aria-labelledby="document-tab">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <form action="{{ route('owners.store') }}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="doc_name">Document Name <span class="text-danger">*</span></label>
+                                                                    <input type="text" class="form-control @error('doc_name') is-invalid @enderror" id="doc_name" name="doc_name" value="{{ old('doc_name') }}">
+                                                                    @error('doc_name')
+                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="profile_image">Upload Document</label>
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input @error('document') is-invalid @enderror" id="document" name="document" accept="image/*">
+                                                                        <label class="custom-file-label" for="document">Choose file</label>
+                                                                    </div>
+                                                                    @error('document')
+                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="form-group d-flex justify-content-end">
+                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped" id="table-1">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No</th>
+                                                                    <th>Document Name</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {{-- @foreach ($owner->apartments as $key => $apartment)
+                                                            <tr>
+                                                                <td>{{ ++$key }}</td>
+                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
+                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
+                                                            </tr>
+                                                        @endforeach --}}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 

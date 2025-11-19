@@ -116,7 +116,6 @@
                                             <select class="form-control @error('apartment_ids') is-invalid @enderror" id="apartment_id" name="apartment_ids[]" multiple>
                                             </select>
                                             <div id="selected-apartments-display" class="mt-2"></div>
-                                            <small class="form-text text-muted">Select apartments from the dropdown. Selected apartments will appear below.</small>
                                             @error('apartment_ids')
                                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                             @enderror
@@ -188,7 +187,7 @@
                     floor.apartments.forEach(apartment => {
                         apartmentChoiceCache.push({
                             value: String(apartment.id),
-                            label: `${tower.tower_name.toUpperCase()} • ${floor.floor_name} • ${apartment.apartment_number}`,
+                            label: `${apartment.apartment_number}`,
                             customProperties: {
                                 towerId: String(tower.id),
                                 floorId: String(floor.id),

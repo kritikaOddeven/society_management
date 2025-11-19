@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('owners', function (Blueprint $table) {
-            $table->foreignId('parking_id')
-                ->nullable()
-                ->after('apartment_id')
-                ->constrained('parkings')
-                ->nullOnDelete();
+            $table->foreignId('parking_id')->nullable()->constrained('parkings')->nullOnDelete()->after('apartment_id');
         });
     }
 
@@ -31,4 +27,3 @@ return new class extends Migration
         });
     }
 };
-
