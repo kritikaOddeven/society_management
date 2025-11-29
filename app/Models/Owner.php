@@ -42,4 +42,21 @@ class Owner extends Model
     {
         return $this->belongsTo(Parking::class);
     }
+
+    public function families()
+{
+    return $this->hasMany(OwnerFamily::class);
+}
+
+public function documents()
+{
+    return $this->hasMany(OwnerDocument::class);
+}
+
+public function tenants()
+{
+    return $this->hasMany(Tenant::class, 'owner_id', 'id');
+}
+
+
 }

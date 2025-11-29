@@ -1,23 +1,25 @@
 <?php
 
+use App\Http\Controllers\AmenitieController;
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\ApartmentTypeController;
-use App\Http\Controllers\FloorController;
-use App\Http\Controllers\OwnerController;
-use App\Http\Controllers\ParkingController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TowerController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TenantController;
-use App\Http\Controllers\AmenitieController;
-use App\Http\Controllers\RentController;
-use App\Http\Controllers\MaintenanceController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BillTypeController;
-use App\Http\Controllers\UtilityBillController;
 use App\Http\Controllers\CommonAreaBillController;
+use App\Http\Controllers\FloorController;
+use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\OwnerDocumentController;
+use App\Http\Controllers\OwnerFamilyController;
+use App\Http\Controllers\ParkingController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RentController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TowerController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UtilityBillController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -58,11 +60,15 @@ Route::middleware('auth')->group(function () {
         Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+
         return redirect('/login');
     })->name('logout');
 
     Route::resource('owners', OwnerController::class);
-    Route::post('owners/family', [OwnerController::class, 'familyMemberStore'])->name('owners.family.store');
+    Route::post('owners/{id}/family', [OwnerFamilyController::class, 'store'])->name('owners.family.store');
+    Route::delete('owners/family/{id}', [OwnerFamilyController::class, 'destroy'])->name('owners.family.destroy');
+    Route::post('owners/{id}/document', [OwnerDocumentController::class, 'store'])->name('owners.document.store');
+    Route::delete('owner-document/{id}', [OwnerDocumentController::class, 'destroy'])->name('owner.document.destroy');
 
     Route::resource('towers', TowerController::class);
     Route::resource('floors', FloorController::class);
@@ -76,7 +82,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('rents', RentController::class);
     Route::post('rents/payment', [RentController::class, 'payment'])->name('rents.payment');
 
-   
     Route::get('/reports', function () {
         return view('reports.maintenance');
     });
@@ -90,11 +95,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('service_types', ServiceTypeController::class);
         Route::resource('maintenance', MaintenanceController::class);
         Route::resource('bill_types', BillTypeController::class);
-        
+
     });
     Route::prefix('bills')->as('bills.')->group(function () {
         Route::resource('utility', UtilityBillController::class)->except(['destroy']);
         Route::resource('common_area', CommonAreaBillController::class)->except(['destroy']);
         Route::get('maintenance', [BillController::class, 'maintenanceIndex'])->name('maintenance.index');
-      });
+    });
 });

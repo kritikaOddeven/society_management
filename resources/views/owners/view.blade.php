@@ -78,14 +78,18 @@
                                                 <span>Apartment Number </span>
                                             </div>
                                             <div class="col-md-8">
-                                                <p>   @if($owner->apartments && $owner->apartments->count() > 0)
-                                                        @foreach($owner->apartments as $apartment)
+                                                <p>
+                                                    @if ($owner->apartments && $owner->apartments->count() > 0)
+                                                        @foreach ($owner->apartments as $apartment)
                                                             <span>{{ $apartment->apartment_number }}</span>
-                                                            @if(!$loop->last),@endif
+                                                            @if (!$loop->last)
+                                                                ,
+                                                            @endif
                                                         @endforeach
                                                     @else
                                                         <span class="text-muted">-</span>
-                                                    @endif</p>
+                                                    @endif
+                                                </p>
                                             </div>
 
                                             <div class="col-md-4">
@@ -181,16 +185,22 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {{-- @foreach ($owner->apartments as $key => $apartment)
+                                                        @foreach ($owner->tenants as $key => $tenat)
                                                             <tr>
                                                                 <td>{{ ++$key }}</td>
-                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
-                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
-                                                                <td>{{ $apartment->apartment_type ?? '-' }}</td>
-                                                                <td>{{ $apartment->tower->tower_name ?? '-' }}</td>
-                                                                <td>{{ $apartment->floor->floor_name ?? '-' }}</td>
+                                                                <td>{{ $tenat->name ?? '-' }}</td>
+                                                                <td>{{ $tenat->email ?? '-' }}</td>
+                                                                <td> {{ $tenat->country_code }} {{ $tenat->phone_number }}</td>
+                                                                <td>
+                                                                    @if ($tenat->status)
+                                                                        <span class="badge badge-success">Active</span>
+                                                                    @else
+                                                                        <span class="badge badge-danger">Inactive</span>
+                                                                    @endif
+                                                                </td>
+                                                                 <td>{{ $tenat->apartment->apartment_number ?? '-'}}</td>
                                                             </tr>
-                                                        @endforeach --}}
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -199,22 +209,33 @@
                                         <div class="tab-pane fade" id="family" role="tabpanel" aria-labelledby="family-tab">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <form action="{{ route('owners.family.store') }}" method="POST">
+                                                    <form action="{{ route('owners.family.store', $owner->id) }}" method="POST">
                                                         @csrf
-                                                        <div class="row align-items-end">
+                                                        <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="member">Add Family Member <span class="text-danger">*</span></label>
-                                                                    <input type="text" class="form-control @error('member') is-invalid @enderror" id="member" name="member" value="{{ old('member') }}">
-                                                                    @error('member')
+                                                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
+                                                                    @error('name')
                                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                                     @enderror
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-2 d-flex justify-content-start">
-                                                                <button type="submit" class="btn btn-primary w-50" style="margin-top: 30px;">Add</button>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="relation">Relation <span class="text-danger">*</span></label>
+                                                                    <input type="text" class="form-control @error('relation') is-invalid @enderror" id="relation" name="relation" value="{{ old('relation') }}">
+                                                                    @error('relation')
+                                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
                                                             </div>
+
+                                                        </div>
+
+                                                        <div class="form-group d-flex justify-content-end">
+                                                            <button type="submit" class="btn btn-primary">Save</button>
                                                         </div>
 
                                                     </form>
@@ -225,17 +246,34 @@
                                                                 <tr>
                                                                     <th>S.No</th>
                                                                     <th>Family Member Name</th>
+                                                                    <th>Relation</th>
                                                                     <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {{-- @foreach ($owner->apartments as $key => $apartment)
-                                                            <tr>
-                                                                <td>{{ ++$key }}</td>
-                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
-                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
-                                                            </tr>
-                                                        @endforeach --}}
+                                                                @foreach ($owner->families as $key => $family)
+                                                                    <tr>
+                                                                        <td>{{ ++$key }}</td>
+                                                                        <td>{{ $family->name ?? '-' }}</td>
+                                                                        <td>{{ $family->relation ?? '-' }}</td>
+                                                                        <td>
+                                                                            <div class="btn-group" role="group">
+
+                                                                                <a href="" class="btn btn-primary btn-sm mr-2" data-toggle="tooltip" title="Edit">
+                                                                                    <i class="fas fa-pencil-alt"></i>
+                                                                                </a>
+
+                                                                                <form action="{{ route('owners.family.destroy', $family->id) }}" method="POST" style="display: inline;">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+                                                                                    <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete this owner family?')">
+                                                                                        <i class="fas fa-trash"></i>
+                                                                                    </button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -246,7 +284,7 @@
                                         <div class="tab-pane fade" id="document" role="tabpanel" aria-labelledby="document-tab">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <form action="{{ route('owners.store') }}" method="POST" enctype="multipart/form-data">
+                                                    <form action="{{ route('owners.document.store', $owner->id) }}" method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="row">
                                                             <div class="col-md-6">
@@ -263,10 +301,10 @@
                                                                 <div class="form-group">
                                                                     <label for="profile_image">Upload Document</label>
                                                                     <div class="custom-file">
-                                                                        <input type="file" class="custom-file-input @error('document') is-invalid @enderror" id="document" name="document" accept="image/*">
-                                                                        <label class="custom-file-label" for="document">Choose file</label>
+                                                                        <input type="file" class="custom-file-input @error('doc_file') is-invalid @enderror" id="doc_file" name="doc_file" accept="image/*">
+                                                                        <label class="custom-file-label" for="doc_file">Choose file</label>
                                                                     </div>
-                                                                    @error('document')
+                                                                    @error('doc_file')
                                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                                     @enderror
                                                                 </div>
@@ -284,18 +322,32 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>S.No</th>
+                                                                    <th>Document File</th>
                                                                     <th>Document Name</th>
                                                                     <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {{-- @foreach ($owner->apartments as $key => $apartment)
-                                                            <tr>
-                                                                <td>{{ ++$key }}</td>
-                                                                <td>{{ $apartment->apartment_number ?? '-' }}</td>
-                                                                <td>{{ $apartment->apartment_area ?? '-' }}</td>
-                                                            </tr>
-                                                        @endforeach --}}
+                                                                @foreach ($owner->documents as $key => $doc)
+                                                                    <tr>
+                                                                        <td>{{ ++$key }}</td>
+                                                                        <td>
+                                                                            <a href="{{ asset('owner_docs/' . $doc->doc_file) }}" target="_blank">
+                                                                                View / Download
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>{{ $doc->doc_name ?? '-' }}</td>
+                                                                        <td>
+                                                                            <form action="{{ route('owner.document.destroy', $doc->id) }}" method="POST">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button onclick="return confirm('Delete this document?')" class="btn btn-danger btn-sm">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                </button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
                                                             </tbody>
                                                         </table>
                                                     </div>
