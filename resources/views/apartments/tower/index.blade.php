@@ -17,6 +17,8 @@
                         <div class="card-header d-md-flex justify-content-between">
                             <h4>Tower List</h4>
                             <div>
+                                <a href="{{ route('towers.bulk-upload') }}" class="btn btn-info rounded mr-2"><i class="fas fa-upload"></i> Bulk Upload</a>
+                                <a href="{{ route('towers.export') }}" class="btn btn-success rounded mr-2"><i class="fas fa-download"></i> Export</a>
                                 <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addTowerModal"><i class="fas fa-plus"></i> Add Tower</button>
                             </div>
                         </div>

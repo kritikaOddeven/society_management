@@ -17,6 +17,8 @@
                         <div class="card-header d-md-flex justify-content-between">
                             <h4>Floors List</h4>
                             <div>
+                                <a href="{{ route('floors.bulk-upload') }}" class="btn btn-info rounded mr-2"><i class="fas fa-upload"></i> Bulk Upload</a>
+                                <a href="{{ route('floors.export') }}" class="btn btn-success rounded mr-2"><i class="fas fa-download"></i> Export</a>
                                 <button class="btn btn-primary rounded" data-toggle="modal" data-target="#addFloorModal"><i class="fas fa-plus"></i> Add Floor</button>
                             </div>
                         </div>

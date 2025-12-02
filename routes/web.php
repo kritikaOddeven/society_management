@@ -70,8 +70,20 @@ Route::middleware('auth')->group(function () {
     Route::post('owners/{id}/document', [OwnerDocumentController::class, 'store'])->name('owners.document.store');
     Route::delete('owner-document/{id}', [OwnerDocumentController::class, 'destroy'])->name('owner.document.destroy');
 
-    Route::resource('towers', TowerController::class);
-    Route::resource('floors', FloorController::class);
+    Route::resource('towers', TowerController::class)->except(['show', 'create', 'edit']);
+    Route::get('towers/bulk-upload', [TowerController::class, 'bulkUpload'])->name('towers.bulk-upload');
+    Route::get('towers/export', [TowerController::class, 'export'])->name('towers.export');
+    Route::get('towers/download-template', [TowerController::class, 'downloadTemplate'])->name('towers.download-template');
+    Route::get('towers/download-example', [TowerController::class, 'downloadExample'])->name('towers.download-example');
+    Route::post('towers/import', [TowerController::class, 'import'])->name('towers.import');
+    
+    Route::resource('floors', FloorController::class)->except(['show', 'create', 'edit']);
+    Route::get('floors/bulk-upload', [FloorController::class, 'bulkUpload'])->name('floors.bulk-upload');
+    Route::get('floors/export', [FloorController::class, 'export'])->name('floors.export');
+    Route::get('floors/download-template', [FloorController::class, 'downloadTemplate'])->name('floors.download-template');
+    Route::get('floors/download-example', [FloorController::class, 'downloadExample'])->name('floors.download-example');
+    Route::get('floors/download-towers', [FloorController::class, 'downloadTowers'])->name('floors.download-towers');
+    Route::post('floors/import', [FloorController::class, 'import'])->name('floors.import');
     Route::resource('apartments', ApartmentController::class);
     Route::resource('parkings', ParkingController::class);
     Route::resource('amenities', AmenitieController::class);
