@@ -84,6 +84,15 @@ Route::middleware('auth')->group(function () {
     Route::get('floors/download-example', [FloorController::class, 'downloadExample'])->name('floors.download-example');
     Route::get('floors/download-towers', [FloorController::class, 'downloadTowers'])->name('floors.download-towers');
     Route::post('floors/import', [FloorController::class, 'import'])->name('floors.import');
+    
+    // Apartment specific routes (before resource routes)
+    Route::get('apartments/bulk-upload', [ApartmentController::class, 'bulkUpload'])->name('apartments.bulk-upload');
+    Route::get('apartments/export', [ApartmentController::class, 'export'])->name('apartments.export');
+    Route::get('apartments/download-template', [ApartmentController::class, 'downloadTemplate'])->name('apartments.download-template');
+    Route::get('apartments/download-example', [ApartmentController::class, 'downloadExample'])->name('apartments.download-example');
+    Route::get('apartments/download-towers', [ApartmentController::class, 'downloadTowers'])->name('apartments.download-towers');
+    Route::get('apartments/download-floors', [ApartmentController::class, 'downloadFloors'])->name('apartments.download-floors');
+    Route::post('apartments/import', [ApartmentController::class, 'import'])->name('apartments.import');
     Route::resource('apartments', ApartmentController::class);
     Route::resource('parkings', ParkingController::class);
     Route::resource('amenities', AmenitieController::class);

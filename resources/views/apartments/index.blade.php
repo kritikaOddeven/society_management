@@ -17,6 +17,8 @@
                         <div class="card-header d-md-flex justify-content-between">
                             <h4>Apartments List</h4>
                             <div>
+                                <a href="{{ route('apartments.bulk-upload') }}" class="btn btn-info rounded mr-2"><i class="fas fa-upload"></i> Bulk Upload</a>
+                                <a href="{{ route('apartments.export') }}" class="btn btn-success rounded mr-2"><i class="fas fa-download"></i> Export</a>
                                 <a href="{{ route('apartments.create') }}" class="btn btn-primary rounded">
                                     <i class="fas fa-plus"></i> Add Apartment
                                 </a>

@@ -7,7 +7,14 @@ use App\Models\Floor;
 use App\Models\Owner;
 use App\Models\Parking;
 use App\Models\Tower;
+use App\Exports\ApartmentExport;
+use App\Exports\ApartmentTemplateExport;
+use App\Exports\TowerExport;
+use App\Exports\FloorExport;
+use App\Imports\ApartmentImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 
 class ApartmentController extends Controller
 {
@@ -218,6 +225,96 @@ class ApartmentController extends Controller
     {
         $apartment->delete();
         return redirect()->route('apartments.index')->with('success', 'Apartment deleted successfully.');
+    }
+
+    /**
+     * Show bulk upload page
+     */
+    public function bulkUpload()
+    {
+        $towers = Tower::orderBy('tower_name')->get();
+        $types = ApartmentType::orderBy('apartment_type')->get();
+        return view('apartments.bulk-upload', compact('towers', 'types'));
+    }
+
+    /**
+     * Export apartments to Excel
+     */
+    public function export()
+    {
+        return Excel::download(new ApartmentExport, 'apartments_' . date('Y-m-d_His') . '.xlsx');
+    }
+
+    /**
+     * Download template for apartment import
+     */
+    public function downloadTemplate()
+    {
+        return Excel::download(new ApartmentTemplateExport, 'apartment_template.xlsx');
+    }
+
+    /**
+     * Download example file
+     */
+    public function downloadExample()
+    {
+        return Excel::download(new ApartmentExport, 'apartment_example.xlsx');
+    }
+
+    /**
+     * Export towers for reference
+     */
+    public function downloadTowers()
+    {
+        return Excel::download(new TowerExport, 'towers_reference_' . date('Y-m-d_His') . '.xlsx');
+    }
+
+    /**
+     * Export floors for reference
+     */
+    public function downloadFloors()
+    {
+        return Excel::download(new FloorExport, 'floors_reference_' . date('Y-m-d_His') . '.xlsx');
+    }
+
+    /**
+     * Import apartments from Excel
+     */
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls|max:10240',
+        ], [
+            'file.required' => 'Please select an Excel file to upload.',
+            'file.mimes' => 'The file must be an Excel file (.xlsx or .xls).',
+            'file.max' => 'The file size must not exceed 10MB.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            $import = new ApartmentImport();
+            Excel::import($import, $request->file('file'));
+
+            $successCount = Apartment::count();
+            $failures = $import->failures();
+
+            if ($failures->count() > 0) {
+                return redirect()->back()
+                    ->with('warning', 'Import completed with ' . $failures->count() . ' errors. Some rows were skipped.')
+                    ->with('failures', $failures);
+            }
+
+            return redirect()->back()
+                ->with('success', 'Apartments imported successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error importing file: ' . $e->getMessage());
+        }
     }
 
 }
